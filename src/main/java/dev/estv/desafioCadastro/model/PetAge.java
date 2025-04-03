@@ -5,9 +5,9 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class PetAge {
 
-    private String age;
+    private Integer age;
 
-    public PetAge(String age) {
+    public PetAge(Integer age) {
         try {
             validateAge(age);
             this.age = age;
@@ -18,26 +18,22 @@ public class PetAge {
 
     public PetAge() { }
 
-    public String getAge() { return age; }
+    public Integer getAge() { return age; }
 
-    public void setAge(String age) { this.age = age; }
+    public void setAge(Integer age) { this.age = age; }
 
-    private void validateAge(String age) {
-        if(!age.matches("^\\d,\\d{2}$")
-                || !age.matches("^\\d+$")) {
-            System.out.println("Idade inválida!");
+    private void validateAge(Integer age) {
+        if(String.valueOf(age).matches("^\\d,\\d$")) {
+            this.age = (int) Double.parseDouble(String.valueOf(age));
         }
-        if(age.contains(".")) {
-            age = age.replace(".",",");
-        }
-        int ageF = Integer.parseInt(age);
-        if(ageF <0 || ageF > 20) {
+        if(age <0 || age > 20) {
             System.out.println("Idade inválida!");
         }
     }
 
     @Override
     public String toString() {
-        return age;
+        return "PetAge{" +
+                "age=" + age;
     }
 }

@@ -16,11 +16,9 @@ public class AddPetService {
     @Autowired
     PetRepository petRepository;
 
-    Scanner scan = new Scanner(System.in);
-
-    private final String na = "NÃO INFORMADO";
-
     public void addPet() {
+
+        Scanner scan = new Scanner(System.in);
 
         List<QuestionList> ql = questionListRepository.findAll();
         List<String> answers = new ArrayList<>();
@@ -30,51 +28,36 @@ public class AddPetService {
             answers.add(scan.nextLine());
         }
 
-        for(String answer : answers) {
-            if(answer == null) {
-                answer = na;
-            }
-        }
-
-        PetName petName = new PetName(answers.getFirst());
-        PetType petType = typeFormat(PetType.valueOf(answers.get(1).toUpperCase()));
-        PetSex petSex = sexFormat(PetSex.valueOf(answers.get(2).toUpperCase()));
-        PetAddres petAddres = new PetAddres(answers.get(3));
-        PetAge petAge = new PetAge(answers.get(4));
-        PetWeight petWeight = new PetWeight(answers.get(5));
-        PetRace petRace = new PetRace(answers.get(6));
-
         Pet pet = Pet.PetBuilder.petBuilder()
-                .name(petName)
-                .type(petType)
-                .sex(petSex)
-                .addres(petAddres)
-                .age(petAge)
-                .weight(petWeight)
-                .race(petRace)
+                .name(new PetName(answers.getFirst().toUpperCase()))
+                .type(typeFormat(PetType.valueOf(answers.get(1).toUpperCase())))
+                .gender(genderFormat(PetGender.valueOf(answers.get(2).toUpperCase())))
+                .addres(new PetAddres(answers.get(3).toUpperCase()))
+                .age(new PetAge(Integer.parseInt(answers.get(4))))
+                .weight(new PetWeight(Double.parseDouble(answers.get(5))))
+                .race(new PetRace(answers.get(6).toUpperCase()))
                 .build();
-//        petRepository.save(pet);
-
+        petRepository.save(pet);
         System.out.println(pet);
     }
 
-    public PetType typeFormat(PetType petType) {
+    public String typeFormat(PetType petType) {
         String type = petType.toString();
         PetType[] petTypeList = PetType.values();
         List<String> typeFound = new ArrayList<>();
         if (Arrays.toString(petTypeList).contains(type)) {
             typeFound.add(type);
         }
-        return PetType.valueOf(typeFound.toString().replace("[", "").replace("]",""));
+        return typeFound.toString().replace("[", "").replace("]", "");
     }
 
-    public PetSex sexFormat(PetSex petSex) {
-        String sex = petSex.toString();
-        PetSex[] petSexList = PetSex.values();
-        List<String> sexFound = new ArrayList<>();
-        if (Arrays.toString(petSexList).contains(sex)) {
-            sexFound.add(sex);
+    public String genderFormat(PetGender petGender) {
+        String gender = petGender.toString();
+        PetGender[] petGenderList = PetGender.values();
+        List<String> genderFound = new ArrayList<>();
+        if (Arrays.toString(petGenderList).contains(gender)) {
+            genderFound.add(gender);
         }
-        return PetSex.valueOf(sexFound.toString().replace("[", "").replace("]",""));
+        return genderFound.toString().replace("[", "").replace("]", "");
     }
 }

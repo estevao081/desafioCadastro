@@ -5,9 +5,9 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class PetWeight {
 
-    private String weight;
+    private Double weight;
 
-    public PetWeight(String weight) {
+    public PetWeight(Double weight) {
         try {
             validateWeight(weight);
             this.weight = weight;
@@ -18,25 +18,23 @@ public class PetWeight {
 
     public PetWeight() { }
 
-    public String getPetWeight() { return weight; }
+    public Double getPetWeight() { return weight; }
 
-    public void setPetWeight(String petWeight) { weight = petWeight; }
+    public void setPetWeight(Double petWeight) { weight = petWeight; }
 
-    private void validateWeight(String weight) {
-        if(!weight.matches("^\\d,\\d{2}$")) {
-            System.out.println("Peso inválido!");
+    private void validateWeight(Double weight) {
+        if(!String.valueOf(weight).contains(",")) {
+            this.weight = Double.parseDouble(String.valueOf(weight).replace(",", "."));
         }
-        if(weight.contains(".")) {
-            weight = weight.replace(".",",");
-        }
-        double weightF = Double.parseDouble(weight);
-        if(weightF <0.5 || weightF > 60) {
+        if(weight <0.5 || weight > 60) {
             System.out.println("Peso inválido!");
         }
     }
 
     @Override
     public String toString() {
-        return weight;
+        return "PetWeight{" +
+                "weight=" + weight +
+                '}';
     }
 }

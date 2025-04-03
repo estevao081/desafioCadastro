@@ -3,6 +3,6 @@ package dev.estv.desafioCadastro.model;
 import jakarta.persistence.Embeddable;
 
 @Embeddable
-public enum PetSex {
+public enum PetGender {
     M, F
 }

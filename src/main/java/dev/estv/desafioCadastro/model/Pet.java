@@ -2,8 +2,6 @@ package dev.estv.desafioCadastro.model;
 
 import jakarta.persistence.*;
 
-import java.util.Map;
-
 @Entity
 @Table(name = "pets")
 public class Pet {
@@ -13,8 +11,8 @@ public class Pet {
     private Long id;
     @Embedded
     private PetName name;
-    private PetType type;
-    private PetSex sex;
+    private String type;
+    private String gender;
     private PetAddres addres;
     private PetAge age;
     private PetWeight weight;
@@ -26,19 +24,19 @@ public class Pet {
                 "id=" + id +
                 ", name=" + name +
                 ", type=" + type +
-                ", sex=" + sex +
+                ", gender=" + gender +
                 ", addres='" + addres + '\'' +
-                ", age=" + age +
-                ", weight=" + weight +
+                ", age=" + age.toString() +
+                ", weight=" + weight.toString() +
                 ", race='" + race + '\'' +
                 '}';
     }
 
-    public Pet(Long id, PetName name, PetType type, PetSex sex, PetAddres addres, PetAge age, PetWeight weight, PetRace race) {
+    public Pet(Long id, PetName name, String type, String gender, PetAddres addres, PetAge age, PetWeight weight, PetRace race) {
         this.id = id;
         this.name = name;
         this.type = type;
-        this.sex = sex;
+        this.gender = gender;
         this.addres = addres;
         this.age = age;
         this.weight = weight;
@@ -51,17 +49,17 @@ public class Pet {
 
     public void setId(Long id) { this.id = id; }
 
-    public String getName() { return name.getName(); }
+    public PetName getName() { return name; }
 
     public void setName(PetName name) { this.name = name; }
 
-    public PetType getType() { return type; }
+    public String getType() { return type; }
 
-    public void setType(PetType type) { this.type = type; }
+    public void setType(String type) { this.type = type; }
 
-    public PetSex getSex() { return sex; }
+    public String getGender() { return gender; }
 
-    public void setSex(PetSex sex) { this.sex = sex; }
+    public void setGender(String gender) { this.gender = gender; }
 
     public PetAddres getAddres() { return addres; }
 
@@ -82,8 +80,8 @@ public class Pet {
     public static final class PetBuilder {
         private Long id;
         private PetName name;
-        private PetType type;
-        private PetSex sex;
+        private String type;
+        private String gender;
         private PetAddres addres;
         private PetAge age;
         private PetWeight weight;
@@ -106,13 +104,13 @@ public class Pet {
             return this;
         }
 
-        public PetBuilder type(PetType type) {
+        public PetBuilder type(String type) {
             this.type = type;
             return this;
         }
 
-        public PetBuilder sex(PetSex sex) {
-            this.sex = sex;
+        public PetBuilder gender(String gender) {
+            this.gender = gender;
             return this;
         }
 
@@ -141,7 +139,7 @@ public class Pet {
             pet.setId(id);
             pet.setName(name);
             pet.setType(type);
-            pet.setSex(sex);
+            pet.setGender(gender);
             pet.setAddres(addres);
             pet.setAge(age);
             pet.setWeight(weight);
