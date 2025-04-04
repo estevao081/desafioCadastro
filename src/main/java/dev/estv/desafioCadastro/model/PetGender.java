@@ -4,5 +4,5 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public enum PetGender {
-    M, F
+    M, F;
 }

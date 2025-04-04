@@ -4,5 +4,5 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public enum PetType {
-    CÃO, GATO, AVE, PEIXE, ROEDOR, RÉPTIL
+    CÃO, GATO, AVE, PEIXE, ROEDOR, RÉPTIL;
 }

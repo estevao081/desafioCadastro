@@ -7,7 +7,9 @@ import jakarta.persistence.*;
 public class QuestionList {
 
     @Override
-    public String toString() { return id + " - " + question; }
+    public String toString() {
+        return id + " - " + question;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

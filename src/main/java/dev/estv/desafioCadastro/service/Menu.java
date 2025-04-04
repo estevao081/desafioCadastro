@@ -45,7 +45,7 @@ public class Menu implements CommandLineRunner {
 
                         break;
                     case 4:
-
+                        controller.searchPet();
                         break;
                     case 5:
 
