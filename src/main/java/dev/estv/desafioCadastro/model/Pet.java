@@ -21,14 +21,14 @@ public class Pet {
 
     @Override
     public String toString() {
-        return "id = " + id +
-                ", Nome = " + name +
-                ", Tipo = " + type +
-                ", Gênero = " + gender +
-                ", Endereço = " + addres +
-                ", Idade = " + age +
-                ", Peso = " + weight +
-                ", Raça = " + race;
+        return "ID: " + id +
+                ", Nome: " + name +
+                ", Tipo: " + type +
+                ", Gênero: " + gender +
+                ", Endereço: " + addres +
+                ", Idade: " + age +
+                ", Peso: " + weight +
+                ", Raça: " + race;
     }
 
     public Pet(Long id, String name, String type, String gender, String addres, String age, String weight, String race) {

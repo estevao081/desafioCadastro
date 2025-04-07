@@ -23,7 +23,7 @@ public class Menu implements CommandLineRunner {
                 System.out.println("2. Alterar os dados do pet cadastrado");
                 System.out.println("3. Deletar um pet cadastrado");
                 System.out.println("4. Listar todos os pets cadastrados");
-                System.out.println("5. Listar pets por algum critério (idade, nome, raça)");
+                System.out.println("5. Listar pets por algum critério");
                 System.out.println("6. Sair");
 
                 String input = scan.nextLine();
@@ -39,7 +39,7 @@ public class Menu implements CommandLineRunner {
                         controller.addPet();
                         break;
                     case 2:
-
+                        controller.alterPet();
                         break;
                     case 3:
 
@@ -53,6 +53,9 @@ public class Menu implements CommandLineRunner {
                     case 6:
                         System.out.println("Encerrando...");
                         System.exit(0);
+                    default:
+                        System.out.println("Digite uma opção válida.");
+                        return;
                 }
             } catch (IllegalArgumentException e) {
                 System.out.println(e.getMessage());

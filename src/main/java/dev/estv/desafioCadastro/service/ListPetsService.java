@@ -22,7 +22,7 @@ public class ListPetsService {
         }
 
         if(pets.isEmpty()) {
-            System.out.println("Não existem pets cadastrados.");
+            System.out.println("\nNão existem pets cadastrados.\n");
         }
     }
 }
