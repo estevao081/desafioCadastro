@@ -12,8 +12,8 @@ public class PetValidate {
     final String NA = "NÃO INFORMADO";
 
     public String name(String name) {
-        if (!name.matches("^[A-Za-zÀ-ÖØ-öø-ÿ\\s]+$")) {
-            throw new IllegalArgumentException("ERRO: O campo NOME não pode conter caracteres especiais e não pode ficar em branco.\n");
+        if (!name.matches("^[A-Za-zÀ-ÖØ-öø-ÿ]+(\\s[A-Za-zÀ-ÖØ-öø-ÿ]+){1,}$")) {
+            throw new IllegalArgumentException("ERRO: O campo NOME não pode conter caracteres especiais, deve conter NOME e SOBRENOME e não pode ficar em branco.\n");
         }
         return name;
     }

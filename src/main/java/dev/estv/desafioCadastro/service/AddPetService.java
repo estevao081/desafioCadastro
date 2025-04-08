@@ -53,7 +53,6 @@ public class AddPetService {
                 .race(petValidate.race(race))
                 .build();
 
-        System.out.println(pet);
         petRepository.save(pet);
         System.out.println("\nInformações do Pet salvas com sucesso.\n");
     }

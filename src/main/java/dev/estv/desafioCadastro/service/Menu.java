@@ -29,7 +29,11 @@ public class Menu implements CommandLineRunner {
                 String input = scan.nextLine();
 
                 if (!input.matches("\\d+")) {
-                    throw new IllegalArgumentException("Opção inválida!");
+                    throw new IllegalArgumentException("ERRO: Opção inválida!\n");
+                }
+
+                if (Integer.parseInt(input) > 6 || Integer.parseInt(input) < 1) {
+                    throw new IllegalArgumentException("ERRO: Opção inválida!\n");
                 }
 
                 int opcao = Integer.parseInt(input);
@@ -42,19 +46,19 @@ public class Menu implements CommandLineRunner {
                         controller.alterPet();
                         break;
                     case 3:
-
+                        controller.deletePet();
                         break;
                     case 4:
-                        controller.searchPet();
+                        controller.listPets();
                         break;
                     case 5:
-
+                        controller.findPet();
                         break;
                     case 6:
                         System.out.println("Encerrando...");
                         System.exit(0);
                     default:
-                        System.out.println("Digite uma opção válida.");
+                        System.out.println("Digite uma opção válida.\n");
                         return;
                 }
             } catch (IllegalArgumentException e) {
