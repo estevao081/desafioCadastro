@@ -1,9 +1,15 @@
 package main.java.dev.thiago.desafioCadastro;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import main.java.dev.thiago.desafioCadastro.services.LerFormulario;
+
+import java.io.*;
+
 public class Main {
     public static void main(String[] args) {
-        System.out.printf("Hello world!");
+
+        LerFormulario read = new LerFormulario();
+
+        read.lerFormulario();
+
     }
 }
