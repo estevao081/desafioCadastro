@@ -1,15 +1,14 @@
-package main.java.dev.thiago.desafioCadastro.services;
+package main.services;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class Menu {
+public class MenuService {
 
     public void exibirMenu() {
 
         Scanner scan = new Scanner(System.in);
 
-        LerFormulario read = new LerFormulario();
+        PetService petService = new PetService();
 
         boolean menuAtivo = true;
 
@@ -31,7 +30,7 @@ public class Menu {
             switch (opcao) {
 
                 case "1":
-                    read.lerFormulario();
+                    petService.salvarPet();
                     break;
 
                 case "2":
