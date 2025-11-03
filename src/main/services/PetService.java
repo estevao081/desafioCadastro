@@ -7,6 +7,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class PetService {
@@ -21,8 +23,10 @@ public class PetService {
 
         PetModel pet = new PetModel();
 
+        GerarNomeService gerarNomeService = new GerarNomeService();
+
         final String NA = "NÃO INFORMADO";
-        String name = respostas.getFirst();
+        String name = respostas.getFirst().trim();
         String type = respostas.get(1);
         String gender = respostas.get(2);
         String address = respostas.get(3);
@@ -106,17 +110,38 @@ public class PetService {
         pet.setWeight(weight);
         pet.setRace(race);
 
-        String path = "src/main/pets";
+        String path = "src/main/petsCadastrados";
         File diretorio = new File(path);
 
         if (!diretorio.exists()) {
             diretorio.mkdirs();
         }
 
-        File arquivo = new File(diretorio, "teste");
+        String nomeArquivo = gerarNomeService.gerarNome(name + ".txt");
+
+        File arquivo = new File(diretorio, nomeArquivo);
+
+        List<String> respostasParaSalvar = new ArrayList<>(List.of());
+        respostasParaSalvar.add(pet.getName());
+        respostasParaSalvar.add(pet.getType().toString());
+        respostasParaSalvar.add(pet.getGender().toString());
+        respostasParaSalvar.add(pet.getAge());
+        respostasParaSalvar.add(pet.getWeight());
+        respostasParaSalvar.add(pet.getAddress());
+        respostasParaSalvar.add(pet.getRace());
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
-            bw.write(pet.toString());
+
+            int contador = 1;
+
+            for (int i = 0; i < respostasParaSalvar.size(); i++) {
+                bw.write(contador + " - " + respostasParaSalvar.get(i));
+                if (i < respostasParaSalvar.size() - 1) {
+                    bw.newLine();
+                }
+                contador++;
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
