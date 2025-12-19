@@ -8,11 +8,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class PetService {
 
@@ -272,6 +271,7 @@ public class PetService {
     public void alterarPet() {
 
         Scanner scanner = new Scanner(System.in);
+        GerarNomeService gerarNomeService = new GerarNomeService();
 
         List<String> pets = buscarPet();
 
@@ -288,7 +288,8 @@ public class PetService {
             return;
         }
 
-        String petSelecionado = pets.get(opcaoPet);
+        String petSelecionado = pets.get(opcaoPet)
+                .replaceFirst("^\\d+\\. ", "");
 
         List<String> campos = List.of(
                 "Nome",
@@ -317,27 +318,37 @@ public class PetService {
             Files.walk(Paths.get(path))
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".TXT"))
-                    .forEach(file -> {
+                    .forEach(filePath -> {
                         try {
 
-                            List<String> linhas = Files.readAllLines(file);
+                            List<String> linhas = Files.readAllLines(filePath);
 
-                            if (linhas.toString().equalsIgnoreCase(
-                                    petSelecionado.replaceFirst("^\\d+\\. ", "")
-                            )) {
-                                linhas.set(campo, novoValor);
-                                Files.write(file, linhas);
-                                System.out.println("Pet alterado com sucesso!");
+                            if (!linhas.toString().equalsIgnoreCase(petSelecionado)) return;
+
+                            linhas.set(campo, novoValor);
+                            Files.write(filePath, linhas);
+
+                            if (campo == 0) {
+                                String novoNomeArquivo =
+                                        gerarNomeService.gerarNome(novoValor + ".txt");
+
+                                Path novoPath = filePath.resolveSibling(novoNomeArquivo);
+
+                                Files.move(filePath, novoPath);
                             }
+
+                            System.out.println("Pet alterado com sucesso!");
 
                         } catch (IOException e) {
                             System.err.println("ERRO: " + e.getMessage());
                         }
                     });
+
         } catch (IOException e) {
             System.err.println("ERRO: " + e.getMessage());
         }
     }
+
 
     public void deletarPet() {
 
