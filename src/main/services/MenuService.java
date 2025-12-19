@@ -38,7 +38,7 @@ public class MenuService {
                     break;
 
                 case "3":
-                    System.out.println("Deletar");
+                    petService.deletarPet();
                     break;
 
                 case "4":
