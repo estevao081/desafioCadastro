@@ -93,7 +93,7 @@ public class PetModel {
     }
 
     public enum PetType {
-        CACHORRO, GATO
+        CAO, GATO
     }
 
     public enum PetGender {

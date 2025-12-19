@@ -6,9 +6,9 @@ public class MenuService {
 
     public void exibirMenu() {
 
-        Scanner scan = new Scanner(System.in);
-
         PetService petService = new PetService();
+
+        Scanner scan = new Scanner(System.in);
 
         boolean menuAtivo = true;
 
@@ -18,7 +18,7 @@ public class MenuService {
             System.out.println("2.Alterar os dados do pet cadastrado");
             System.out.println("3.Deletar um pet cadastrado");
             System.out.println("4.Listar todos os pets cadastrados");
-            System.out.println("5.Listar pets por algum critério (idade, nome, raça)");
+            System.out.println("5.Listar pets por algum critério");
             System.out.println("6.Sair");
 
             String opcao = scan.nextLine();
@@ -34,7 +34,7 @@ public class MenuService {
                     break;
 
                 case "2":
-                    System.out.println("Alterar");
+                    petService.alterarPet();
                     break;
 
                 case "3":
@@ -42,11 +42,11 @@ public class MenuService {
                     break;
 
                 case "4":
-                    System.out.println("Listar todos");
+                    petService.listarTodosOsPets();
                     break;
 
                 case "5":
-                    System.out.println("Listar por critério");
+                    petService.buscarPet();
                     break;
 
                 case "6":

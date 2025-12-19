@@ -7,15 +7,22 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class PetService {
 
-    LerFormularioService read = new LerFormularioService();
+    String path = "src/main/petsCadastrados";
+    File diretorio = new File(path);
 
     public void salvarPet() {
+
+
+        LerFormularioService read = new LerFormularioService();
 
         read.lerFormulario();
 
@@ -45,7 +52,7 @@ public class PetService {
         if (type.equalsIgnoreCase("cao")
                 || type.equalsIgnoreCase("cão")
                 || type.equalsIgnoreCase("cachorro")) {
-            pet.setType(PetModel.PetType.CACHORRO);
+            pet.setType(PetModel.PetType.CAO);
         }
 
         if (gender.equalsIgnoreCase("f")) {
@@ -110,8 +117,6 @@ public class PetService {
         pet.setWeight(weight);
         pet.setRace(race);
 
-        String path = "src/main/petsCadastrados";
-        File diretorio = new File(path);
 
         if (!diretorio.exists()) {
             diretorio.mkdirs();
@@ -132,18 +137,210 @@ public class PetService {
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
 
-            int contador = 1;
-
             for (int i = 0; i < respostasParaSalvar.size(); i++) {
-                bw.write(contador + " - " + respostasParaSalvar.get(i));
+                bw.write(respostasParaSalvar.get(i));
                 if (i < respostasParaSalvar.size() - 1) {
                     bw.newLine();
                 }
-                contador++;
             }
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public List<String> buscarPet() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> opcoesMenu = List.of(
+                "Como deseja buscar o pet?",
+                "1 - Nome",
+                "2 - Gênero",
+                "3 - Idade",
+                "4 - Peso",
+                "5 - Raça",
+                "6 - Endereço",
+                "7 - Data de cadastro"
+        );
+
+        List<String> perguntasPet = List.of(
+                "Informe o nome do pet:",
+                "Informe o gênero do pet:",
+                "Informe a idade do pet:",
+                "Informe o peso do pet:",
+                "Informe a raça do pet:",
+                "Informe o endereço do pet:",
+                "Informe a data de cadastro:"
+        );
+
+        Set<Integer> criterios = new HashSet<>();
+        List<String> dadosDoPet = new ArrayList<>();
+
+        System.out.println("Qual o tipo do animal? (Cão/Gato)");
+        dadosDoPet.add(scanner.nextLine().toUpperCase());
+        if (dadosDoPet.getFirst().equalsIgnoreCase("cão")
+                || dadosDoPet.getFirst().equalsIgnoreCase("cao")
+                || dadosDoPet.getFirst().equalsIgnoreCase("cachorro")) {
+            dadosDoPet.set(0, "CAO");
+        }
+
+        while (true) {
+
+            try {
+                opcoesMenu.forEach(System.out::println);
+                int opcao = Integer.parseInt(scanner.nextLine());
+                if (opcao < 1 || opcao > 7) {
+                    System.out.println("Informe uma opção válida");
+                }
+                criterios.add(opcao - 1);
+                System.out.println("Adicionar mais um critério? (S/N)");
+                if (scanner.nextLine().equalsIgnoreCase("n")) break;
+            } catch (NumberFormatException e) {
+                System.out.println("Informe uma opção válida");
+            }
+        }
+
+        for (int c : criterios) {
+            System.out.println(perguntasPet.get(c));
+            dadosDoPet.add(scanner.nextLine().toUpperCase());
+        }
+
+        Set<String> petsEncontrados = new HashSet<>();
+        AtomicInteger contador = new AtomicInteger(1);
+
+        try {
+            Files.walk(Paths.get(path))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".TXT"))
+                    .forEach(file -> {
+                        try {
+
+                            List<String> pet = Files.readAllLines(file);
+
+                            boolean match = dadosDoPet.stream()
+                                    .allMatch(dado -> pet.toString().toUpperCase().contains(dado));
+
+                            if (match) {
+                                petsEncontrados.add(contador + ". " + pet);
+                                contador.getAndIncrement();
+                            }
+
+                        } catch (IOException e) {
+                            System.err.println("ERRO: " + e.getMessage());
+                        }
+                    });
+        } catch (IOException e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+
+        List<String> petsEncontradosList = new ArrayList<>(petsEncontrados);
+
+        Collections.sort(petsEncontradosList);
+
+        for (String pet : petsEncontradosList) {
+            if (pet.contains(dadosDoPet.toString())) {
+            }
+            System.out.println(pet
+                    .replace("[", "")
+                    .replace("]", ""));
+        }
+
+        return petsEncontradosList;
+    }
+
+    public void listarTodosOsPets() {
+
+        try {
+            Files.walk(Paths.get(path))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".TXT"))
+                    .forEach(filePath -> {
+                        try {
+                            List<String> linhas = Files.readAllLines(filePath);
+                            linhas.forEach(System.out::println);
+                            System.out.println("--------------------");
+                        } catch (IOException e) {
+                            System.err.println("ERRO: " + e.getMessage());
+                        }
+                    });
+        } catch (IOException e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+    public void alterarPet() {
+
+        Scanner scanner = new Scanner(System.in);
+
+        List<String> pets = buscarPet();
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado.");
+            return;
+        }
+
+        System.out.println("Informe o número do pet que deseja alterar:");
+        int opcaoPet = Integer.parseInt(scanner.nextLine()) - 1;
+
+        if (opcaoPet < 0 || opcaoPet >= pets.size()) {
+            System.out.println("Opção inválida.");
+            return;
+        }
+
+        String petSelecionado = pets.get(opcaoPet);
+
+        List<String> campos = List.of(
+                "Nome",
+                "Idade",
+                "Peso",
+                "Raça",
+                "Endereço"
+        );
+
+        System.out.println("Qual campo deseja alterar?");
+        for (int i = 0; i < campos.size(); i++) {
+            System.out.println((i + 1) + " - " + campos.get(i));
+        }
+
+        int campo = Integer.parseInt(scanner.nextLine()) - 1;
+
+        if (campo < 0 || campo >= campos.size()) {
+            System.out.println("Campo inválido.");
+            return;
+        }
+
+        System.out.println("Informe o novo valor:");
+        String novoValor = scanner.nextLine().toUpperCase();
+
+        try {
+            Files.walk(Paths.get(path))
+                    .filter(Files::isRegularFile)
+                    .filter(p -> p.toString().endsWith(".TXT"))
+                    .forEach(file -> {
+                        try {
+
+                            List<String> linhas = Files.readAllLines(file);
+
+                            if (linhas.toString().equalsIgnoreCase(
+                                    petSelecionado.replaceFirst("^\\d+\\. ", "")
+                            )) {
+                                linhas.set(campo, novoValor);
+                                Files.write(file, linhas);
+                                System.out.println("Pet alterado com sucesso!");
+                            }
+
+                        } catch (IOException e) {
+                            System.err.println("ERRO: " + e.getMessage());
+                        }
+                    });
+        } catch (IOException e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+    public void deletarPet() {
+
+
     }
 }
