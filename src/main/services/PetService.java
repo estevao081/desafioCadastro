@@ -1,11 +1,7 @@
 package main.services;
 
 import main.exceptions.*;
-import main.models.PetModel;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -15,138 +11,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PetService {
 
-    String path = "src/main/petsCadastrados";
-    File diretorio = new File(path);
-
-    public void salvarPet() {
-
-
-        LerFormularioService read = new LerFormularioService();
-
-        read.lerFormulario();
-
-        List<String> respostas = read.getRespostas();
-
-        PetModel pet = new PetModel();
-
-        GerarNomeService gerarNomeService = new GerarNomeService();
-
-        final String NA = "NÃO INFORMADO";
-        String name = respostas.getFirst().trim();
-        String type = respostas.get(1);
-        String gender = respostas.get(2);
-        String address = respostas.get(3);
-        String age = respostas.get(4);
-        String weight = respostas.get(5);
-        String race = respostas.get(6);
-
-        if (!name.matches("^$|^[A-Za-zÀ-ÿ]+ [A-Za-zÀ-ÿ]+$")) {
-            throw new InvalidNameException();
-        }
-
-        if (type.equalsIgnoreCase("gato")) {
-            pet.setType(PetModel.PetType.GATO);
-        }
-
-        if (type.equalsIgnoreCase("cao")
-                || type.equalsIgnoreCase("cão")
-                || type.equalsIgnoreCase("cachorro")) {
-            pet.setType(PetModel.PetType.CAO);
-        }
-
-        if (gender.equalsIgnoreCase("f")) {
-            pet.setGender(PetModel.PetGender.F);
-        }
-
-        if (gender.equalsIgnoreCase("m")) {
-            pet.setGender(PetModel.PetGender.M);
-        }
-
-        if (!address.matches("^$|^[A-Za-zÀ-ÿ0-9\\s\\.]+,\\s*\\d+[A-Za-z0-9\\s\\-]*,\\s*[A-Za-zÀ-ÿ\\s]+$")) {
-            throw new InvalidAddressException();
-        }
-
-        if (respostas.get(4).contains(",")) {
-            age = respostas.get(4).replace(",", ".");
-        }
-
-        if (respostas.get(5).contains(",")) {
-            weight = respostas.get(5).replace(",", ".");
-        }
-
-        if (!age.isEmpty()) {
-            if (Double.parseDouble(age) > 20 || Double.parseDouble(age) < 0.1) {
-                throw new InvalidAgeException();
-            }
-        }
-
-        if (!weight.isEmpty()) {
-            if (Double.parseDouble(weight) > 60 || Double.parseDouble(weight) < 0.5) {
-                throw new InvalidWeightException();
-            }
-        }
-
-        if (!race.matches("^$|^[A-Za-zÀ-ÿ\\s'-]+$")) {
-            throw new InvalidRaceException();
-        }
-
-        if (name.isEmpty()) {
-            name = NA;
-        }
-
-        if (race.isEmpty()) {
-            race = NA;
-        }
-
-        if (address.isEmpty()) {
-            address = NA;
-        }
-
-        if (weight.isEmpty()) {
-            weight = NA;
-        }
-
-        if (age.isEmpty()) {
-            age = NA;
-        }
-
-        pet.setName(name);
-        pet.setAddress(address);
-        pet.setAge(age);
-        pet.setWeight(weight);
-        pet.setRace(race);
-
-
-        if (!diretorio.exists()) {
-            diretorio.mkdirs();
-        }
-
-        String nomeArquivo = gerarNomeService.gerarNome(name + ".txt");
-
-        File arquivo = new File(diretorio, nomeArquivo);
-
-        List<String> respostasParaSalvar = new ArrayList<>(List.of());
-        respostasParaSalvar.add(pet.getName());
-        respostasParaSalvar.add(pet.getType().toString());
-        respostasParaSalvar.add(pet.getGender().toString());
-        respostasParaSalvar.add(pet.getAge());
-        respostasParaSalvar.add(pet.getWeight());
-        respostasParaSalvar.add(pet.getAddress());
-        respostasParaSalvar.add(pet.getRace());
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
-
-            for (int i = 0; i < respostasParaSalvar.size(); i++) {
-                bw.write(respostasParaSalvar.get(i));
-                if (i < respostasParaSalvar.size() - 1) {
-                    bw.newLine();
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    final String path = "src/main/petsCadastrados";
 
     public List<String> buscarPet() {
 

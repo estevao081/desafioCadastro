@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class LerFormularioService {
+public class LerFormulario {
 
     public List<String> respostas;
 
@@ -19,7 +19,7 @@ public class LerFormularioService {
         this.respostas = respostas;
     }
 
-    public void lerFormulario() {
+    public void ler() {
 
         String path = "src/main/forms/formulario.txt";
 

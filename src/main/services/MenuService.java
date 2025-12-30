@@ -6,7 +6,10 @@ public class MenuService {
 
     public void exibirMenu() {
 
+        final String path = "src/main/petsCadastrados";
+
         PetService petService = new PetService();
+        SalvarPet salvarPet = new SalvarPet();
 
         Scanner scan = new Scanner(System.in);
 
@@ -30,7 +33,7 @@ public class MenuService {
             switch (opcao) {
 
                 case "1":
-                    petService.salvarPet();
+                    salvarPet.cadastrarPet(path);
                     break;
 
                 case "2":
