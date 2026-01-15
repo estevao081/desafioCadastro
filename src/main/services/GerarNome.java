@@ -2,7 +2,7 @@ package main.services;
 
 import java.time.LocalDateTime;
 
-public class GerarNomeService {
+public class GerarNome {
 
     public String gerarNome(String nome) {
 

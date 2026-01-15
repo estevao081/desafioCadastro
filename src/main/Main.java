@@ -1,13 +1,13 @@
 package main;
 
-import main.services.MenuService;
+import main.services.Menu;
 
 public class Main {
     public static void main(String[] args) {
 
-        MenuService menuService = new MenuService();
+        Menu menu = new Menu();
 
-        menuService.exibirMenu();
+        menu.exibirMenu();
 
     }
 }

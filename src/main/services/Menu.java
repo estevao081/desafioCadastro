@@ -2,13 +2,12 @@ package main.services;
 
 import java.util.Scanner;
 
-public class MenuService {
+public class Menu {
 
     public void exibirMenu() {
 
         final String path = "src/main/petsCadastrados";
 
-        PetService petService = new PetService();
         SalvarPet salvarPet = new SalvarPet();
 
         Scanner scan = new Scanner(System.in);
@@ -37,19 +36,19 @@ public class MenuService {
                     break;
 
                 case "2":
-                    petService.alterarPet();
+                    AtualizarPet.alterarPet(path);
                     break;
 
                 case "3":
-                    petService.deletarPet();
+                    RemoverPet.deletarPet(path);
                     break;
 
                 case "4":
-                    petService.listarTodosOsPets();
+                    ListarPets.listarTodosOsPets(path);
                     break;
 
                 case "5":
-                    petService.buscarPet();
+                    BuscarPet.buscarPet(path);
                     break;
 
                 case "6":

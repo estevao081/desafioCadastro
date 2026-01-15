@@ -1,6 +1,5 @@
 package main.services;
 
-import main.exceptions.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -23,7 +22,7 @@ public class SalvarPet {
         //Construtores
         ValidarPet validarPet = new ValidarPet();
         LerFormulario lerFormulario = new LerFormulario();
-        GerarNomeService gerarNomeService = new GerarNomeService();
+        GerarNome gerarNome = new GerarNome();
 
         //Lê as perguntas do formulário
         lerFormulario.ler();
@@ -49,11 +48,11 @@ public class SalvarPet {
         respostasParaSalvar.add(validarPet.validarPeso(weight));
         respostasParaSalvar.add(validarPet.validarRaca(race));
 
-        String nomeArquivo = gerarNomeService.gerarNome(name + ".txt");
+        String nomeArquivo = gerarNome.gerarNome(name + ".txt");
         File arquivo = new File(diretorio, nomeArquivo);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
-
+            //Utilizando for tradicional para que o texto quebre linha enquanto houver resposta a ser adicionada
             for (int i = 0; i < respostasParaSalvar.size(); i++) {
                 bw.write(respostasParaSalvar.get(i));
                 if (i < respostasParaSalvar.size() - 1) {
