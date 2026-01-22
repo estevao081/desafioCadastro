@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Menu {
 
-    public void exibirMenu() {
+    public static void exibirMenu() {
 
         final String path = "src/main/petsCadastrados";
 

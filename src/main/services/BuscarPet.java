@@ -2,6 +2,7 @@ package main.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -12,7 +13,6 @@ public class BuscarPet {
 
         Scanner scanner = new Scanner(System.in);
 
-        //Lista de critérios para a busca
         List<String> opcoesMenu = List.of(
                 "Como deseja buscar o pet?",
                 "1 - Nome",
@@ -24,7 +24,6 @@ public class BuscarPet {
                 "7 - Data de cadastro"
         );
 
-        //Lista de perguntas com os dados do pet
         List<String> perguntasPet = List.of(
                 "Informe o nome do pet:",
                 "Informe o gênero do pet:",
@@ -35,79 +34,142 @@ public class BuscarPet {
                 "Informe a data de cadastro:"
         );
 
-        //HashSet para não permitir dados duplicados
         Set<Integer> criterios = new HashSet<>();
         List<String> dadosDoPet = new ArrayList<>();
 
-        System.out.println("Qual o tipo do animal? (Cão/Gato)");
-        dadosDoPet.add(scanner.nextLine().toUpperCase());
-        if (dadosDoPet.getFirst().equalsIgnoreCase("cão")
-                || dadosDoPet.getFirst().equalsIgnoreCase("cao")
-                || dadosDoPet.getFirst().equalsIgnoreCase("cachorro")) {
-            dadosDoPet.set(0, "CAO");
+        String tipo;
+
+        while (true) {
+            System.out.println("Qual o tipo do animal? (Cão/Gato)");
+            tipo = scanner.nextLine().trim().toUpperCase();
+
+            if (tipo.equals("CÃO") || tipo.equals("CAO") || tipo.equals("CACHORRO")) {
+                tipo = "CAO";
+                break;
+            }
+
+            if (tipo.equals("GATO")) {
+                break;
+            }
+
+            System.out.println("Tipo inválido. Informe Cão ou Gato.");
         }
 
-        //Loop para saber os critérios de busca
+        dadosDoPet.add(tipo);
+
         while (true) {
             try {
                 opcoesMenu.forEach(System.out::println);
-                int opcao = Integer.parseInt(scanner.nextLine());
+                String entrada = scanner.nextLine();
+
+                if (entrada.isBlank()) break;
+
+                int opcao = Integer.parseInt(entrada);
+
                 if (opcao < 1 || opcao > 7) {
-                    System.out.println("Informe uma opção válida");
+                    System.out.println("Informe uma opção válida.");
+                    continue;
                 }
+
                 criterios.add(opcao - 1);
+
                 System.out.println("Adicionar mais um critério? (S/N)");
-                if (scanner.nextLine().equalsIgnoreCase("n")) break;
+                if (scanner.nextLine().equalsIgnoreCase("N")) break;
+
             } catch (NumberFormatException e) {
-                System.out.println("Informe uma opção válida");
+                System.out.println("Informe uma opção válida.");
             }
         }
 
         for (int c : criterios) {
             System.out.println(perguntasPet.get(c));
-            dadosDoPet.add(scanner.nextLine().toUpperCase());
+            String entrada = scanner.nextLine().trim().toUpperCase();
+
+            if (entrada.isEmpty()) continue;
+
+            if (c == 6) { // Data de cadastro
+                entrada = normalizarDataCadastro(entrada);
+            }
+            dadosDoPet.add(entrada);
         }
 
-        //HashSet para não permitir dados duplicados
         Set<String> petsEncontrados = new HashSet<>();
-        //Contador para exibir os pets encontrados em ordem numérica
         AtomicInteger contador = new AtomicInteger(1);
 
         try {
             Files.walk(Paths.get(path))
                     .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".TXT"))
-                    .forEach(file -> {
-                        try {
-                            List<String> pet = Files.readAllLines(file);
-
-                            boolean match = dadosDoPet.stream()
-                                    .allMatch(dado -> pet.toString().toUpperCase().contains(dado));
-
-                            if (match) {
-                                petsEncontrados.add(contador + ". " + pet);
-                                contador.getAndIncrement();
-                            }
-                        } catch (IOException e) {
-                            System.err.println("ERRO: " + e.getMessage());
-                        }
-                    });
+                    .filter(p -> p.toString().toUpperCase().endsWith(".TXT"))
+                    .forEach(file ->
+                            processarArquivo(file, dadosDoPet, petsEncontrados, contador)
+                    );
         } catch (IOException e) {
             System.err.println("ERRO: " + e.getMessage());
         }
 
-        //Conversão de Set -> List para que a lista possa ser ordenada
-        List<String> petsEncontradosList = new ArrayList<>(petsEncontrados);
+        List<String> resultado = new ArrayList<>(petsEncontrados);
+        Collections.sort(resultado);
 
-        //Ordena a lista de pets encontrados para exibição
-        Collections.sort(petsEncontradosList);
+        resultado.forEach(pet ->
+                System.out.println(pet.replace("[", "").replace("]", ""))
+        );
+        return resultado;
+    }
 
-        for (String pet : petsEncontradosList) {
-            System.out.println(pet
-                    .replace("[", "")
-                    .replace("]", ""));
+    private static void processarArquivo(
+            Path file,
+            List<String> criterios,
+            Set<String> encontrados,
+            AtomicInteger contador
+    ) {
+
+        try {
+            List<String> conteudo = Files.readAllLines(file);
+            String textoPet = conteudo.toString().toUpperCase();
+            String nomeArquivo = file.getFileName().toString().toUpperCase();
+
+            for (String criterio : criterios) {
+
+                // Data de cadastro → nome do arquivo
+                if (criterio.matches("\\d{8}")) {
+                    if (!nomeArquivo.contains(criterio)) return;
+                }
+                // Demais critérios → conteúdo
+                else {
+                    if (!textoPet.contains(criterio)) return;
+                }
+            }
+
+            encontrados.add(contador.getAndIncrement() + ". " + conteudo);
+
+        } catch (IOException e) {
+            System.err.println("ERRO: " + e.getMessage());
+        }
+    }
+
+    private static String normalizarDataCadastro(String entrada) {
+
+        entrada = entrada.trim();
+
+        if (entrada.matches("\\d{1,2}[/-]\\d{1,2}[/-]\\d{2,4}")) {
+
+            String[] partes = entrada.split("[/-]");
+
+            String dia = partes[0].length() == 1 ? "0" + partes[0] : partes[0];
+            String mes = partes[1].length() == 1 ? "0" + partes[1] : partes[1];
+
+            String ano = partes[2];
+            if (ano.length() == 2) {
+                ano = "20" + ano;
+            }
+
+            return ano + mes + dia;
         }
 
-        return petsEncontradosList;
+        if (entrada.matches("\\d{8}.*")) {
+            return entrada;
+        }
+
+        return entrada;
     }
 }
