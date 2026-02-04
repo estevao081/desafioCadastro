@@ -6,7 +6,7 @@ public class Menu {
 
     public static void exibirMenu() {
 
-        final String path = "src/main/petsCadastrados";
+        final String path = "petsCadastrados";
 
         SalvarPet salvarPet = new SalvarPet();
 
