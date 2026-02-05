@@ -2,6 +2,8 @@ package main.models;
 
 import main.exceptions.*;
 
+import java.util.List;
+
 public class PetModel {
 
     private String name;
@@ -172,4 +174,17 @@ public class PetModel {
             };
         }
     }
+
+    public List<String> toLinhas() {
+        return List.of(
+                name,
+                String.valueOf(type),
+                String.valueOf(gender),
+                address,
+                age,
+                weight,
+                race
+        );
+    }
+
 }
