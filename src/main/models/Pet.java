@@ -4,7 +4,7 @@ import main.exceptions.*;
 
 import java.util.List;
 
-public class PetModel {
+public class Pet {
 
     private String name;
     private PetType type;
@@ -28,10 +28,10 @@ public class PetModel {
                 '}';
     }
 
-    public PetModel() {
+    public Pet() {
     }
 
-    public PetModel(String name, PetType type, PetGender gender, String address, String age, String weight, String race) {
+    public Pet(String name, PetType type, PetGender gender, String address, String age, String weight, String race) {
         this.name = name;
         this.type = type;
         this.gender = gender;
@@ -52,23 +52,23 @@ public class PetModel {
         if (name.isEmpty()) {
             name = NA;
         }
-        this.name = name;
+        this.name = name.toUpperCase();
     }
 
     public PetType getType() {
         return type;
     }
 
-    public void setType(PetType type) {
-        this.type = type;
+    public void setType(String input) {
+        this.type = PetType.fromString(input);
     }
 
     public PetGender getGender() {
         return gender;
     }
 
-    public void setGender(PetGender gender) {
-        this.gender = gender;
+    public void setGender(String input) {
+        this.gender = PetGender.fromString(input);
     }
 
     public String getAddress() {
@@ -83,7 +83,7 @@ public class PetModel {
             address = NA;
         }
 
-        this.address = address;
+        this.address = address.toUpperCase();
     }
 
     public String getAge() {
@@ -140,7 +140,7 @@ public class PetModel {
         if (race.isEmpty()) {
             race = NA;
         }
-        this.race = race;
+        this.race = race.toUpperCase();
     }
 
     public enum PetType {

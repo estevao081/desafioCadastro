@@ -9,33 +9,18 @@ import java.util.Scanner;
 
 public class LerFormulario {
 
-    public List<String> respostas;
+    public List<String> ler(String pathFormulario) {
 
-    public List<String> getRespostas() {
-        return respostas;
-    }
+        List<String> perguntas = new ArrayList<>();
 
-    public void setRespostas(List<String> respostas) {
-        this.respostas = respostas;
-    }
-
-    public void ler() {
-
-        String path = "src/main/forms/formulario.txt";
-
-        Scanner scan = new Scanner(System.in);
-
-        List<String> r = new ArrayList<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(pathFormulario))) {
             String linha;
             while ((linha = br.readLine()) != null) {
-                System.out.println(linha);
-                r.add(scan.nextLine().toUpperCase());
+                perguntas.add(linha);
             }
         } catch (IOException e) {
             System.out.println("ERRO: " + e.getMessage());
         }
-        setRespostas(r);
+        return perguntas;
     }
 }

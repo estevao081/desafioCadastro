@@ -1,14 +1,23 @@
 package main.services;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class Menu {
 
     public static void exibirMenu() {
 
-        final String path = "petsCadastrados";
+        //Paths
+        final String pathFormulario = "src/main/forms/formulario.txt";
+        final String pathPets = "petsCadastrados";
 
-        SalvarPet salvarPet = new SalvarPet();
+        //Define onde os pets cadastrados serão salvos
+        File diretorio = new File(pathPets);
+
+        //Cria o arquivo caso não exista (Evita o erro FileNotFound)
+        if (!diretorio.exists()) {
+            diretorio.mkdirs();
+        }
 
         Scanner scan = new Scanner(System.in);
 
@@ -32,23 +41,24 @@ public class Menu {
             switch (opcao) {
 
                 case "1":
-                    salvarPet.cadastrarPet(path);
+                    MontarPet montarPet = new MontarPet();
+                    PetService.salvar(montarPet, pathFormulario, diretorio);
                     break;
 
                 case "2":
-                    AtualizarPet.alterarPet(path);
+                    PetService.atualizar(pathPets);
                     break;
 
                 case "3":
-                    RemoverPet.deletarPet(path);
+                    PetService.deletar(pathPets);
                     break;
 
                 case "4":
-                    ListarPets.listarTodosOsPets(path);
+                    PetService.listarTodos(pathPets);
                     break;
 
                 case "5":
-                    BuscarPet.buscarPet(path);
+                    PetService.buscar(pathPets);
                     break;
 
                 case "6":
