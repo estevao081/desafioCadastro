@@ -2,9 +2,11 @@ package main.models;
 
 import main.exceptions.*;
 
-import java.util.List;
+import java.util.*;
 
 public class Pet {
+
+    private static final String NA = "NÃO INFORMADO";
 
     private String name;
     private PetType type;
@@ -13,25 +15,16 @@ public class Pet {
     private String age;
     private String weight;
     private String race;
-    final String NA = "NÃO INFORMADO";
-
-    @Override
-    public String toString() {
-        return "PetModel{" +
-                "name='" + name + '\'' +
-                ", type=" + type +
-                ", gender=" + gender +
-                ", address='" + address + '\'' +
-                ", age=" + age +
-                ", weight=" + weight +
-                ", race='" + race + '\'' +
-                '}';
-    }
+    private final Map<String, String> atributosExtras;
 
     public Pet() {
+        this.atributosExtras = new LinkedHashMap<>();
     }
 
-    public Pet(String name, PetType type, PetGender gender, String address, String age, String weight, String race) {
+    public Pet(String name, PetType type, PetGender gender,
+               String address, String age, String weight, String race) {
+
+        this();
         this.name = name;
         this.type = type;
         this.gender = gender;
@@ -41,106 +34,92 @@ public class Pet {
         this.race = race;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setName(String name) {
         if (!name.matches("^$|^[A-Za-zÀ-ÿ]+ [A-Za-zÀ-ÿ]+$")) {
             throw new InvalidNameException();
         }
-        if (name.isEmpty()) {
-            name = NA;
-        }
-        this.name = name.toUpperCase();
+        this.name = normalize(name).toUpperCase();
     }
 
-    public PetType getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
     public void setType(String input) {
         this.type = PetType.fromString(input);
     }
 
-    public PetGender getGender() {
-        return gender;
-    }
-
     public void setGender(String input) {
         this.gender = PetGender.fromString(input);
-    }
-
-    public String getAddress() {
-        return address;
     }
 
     public void setAddress(String address) {
         if (!address.matches("^$|^[A-Za-zÀ-ÿ0-9\\s\\.]+,\\s*\\d+[A-Za-z0-9\\s\\-]*,\\s*[A-Za-zÀ-ÿ\\s]+$")) {
             throw new InvalidAddressException();
         }
-        if (address.isEmpty()) {
-            address = NA;
-        }
-
-        this.address = address.toUpperCase();
-    }
-
-    public String getAge() {
-        return age;
+        this.address = normalize(address).toUpperCase();
     }
 
     public void setAge(String age) {
-        if (age.contains(",")) {
-            age = age.replace(",", ".");
-        }
-
-        if (!age.isEmpty()) {
-            if (Double.parseDouble(age) > 20 || Double.parseDouble(age) < 0.1) {
-                throw new InvalidAgeException();
-            }
-        }
-
-        if (age.isEmpty()) {
-            age = NA;
-        }
-        this.age = age;
-    }
-
-    public String getWeight() {
-        return weight;
+        this.age = validateNumber(age, 0.1, 20, new InvalidAgeException());
     }
 
     public void setWeight(String weight) {
-        if (weight.contains(",")) {
-            weight = weight.replace(",", ".");
-        }
-
-        if (!weight.isEmpty()) {
-            if (Double.parseDouble(weight) > 60 || Double.parseDouble(weight) < 0.5) {
-                throw new InvalidWeightException();
-            }
-        }
-
-        if (weight.isEmpty()) {
-            weight = NA;
-        }
-        this.weight = weight;
-    }
-
-    public String getRace() {
-        return race;
+        this.weight = validateNumber(weight, 0.5, 60, new InvalidWeightException());
     }
 
     public void setRace(String race) {
         if (!race.matches("^$|^[A-Za-zÀ-ÿ\\s'-]+$")) {
             throw new InvalidRaceException();
         }
+        this.race = normalize(race).toUpperCase();
+    }
 
-        if (race.isEmpty()) {
-            race = NA;
+    public void addAtributoExtra(String valor) {
+        if (valor == null || valor.isBlank()) {
+            atributosExtras.put(UUID.randomUUID().toString(), NA);
+        } else {
+            atributosExtras.put(UUID.randomUUID().toString(), valor.trim());
         }
-        this.race = race.toUpperCase();
+    }
+
+    public Collection<String> getAtributosExtras() {
+        return Collections.unmodifiableCollection(atributosExtras.values());
+    }
+
+    public List<String> toLinhas() {
+        List<String> linhas = new ArrayList<>();
+
+        linhas.add(name);
+        linhas.add(String.valueOf(type));
+        linhas.add(String.valueOf(gender));
+        linhas.add(address);
+        linhas.add(age);
+        linhas.add(weight);
+        linhas.add(race);
+
+        linhas.addAll(atributosExtras.values());
+
+        return linhas;
+    }
+
+    private String normalize(String value) {
+        return value == null || value.isBlank() ? NA : value.trim();
+    }
+
+    private String validateNumber(String input, double min, double max, RuntimeException ex) {
+        if (input == null || input.isBlank()) {
+            return NA;
+        }
+
+        input = input.replace(",", ".");
+
+        double value = Double.parseDouble(input);
+        if (value < min || value > max) {
+            throw ex;
+        }
+
+        return input;
     }
 
     public enum PetType {
@@ -148,7 +127,7 @@ public class Pet {
 
         public static PetType fromString(String input) {
             if (input == null) {
-                throw new IllegalArgumentException("ERRO: Valor não pode ser nulo");
+                throw new IllegalArgumentException("Valor não pode ser nulo");
             }
 
             return switch (input.trim().toLowerCase()) {
@@ -164,7 +143,7 @@ public class Pet {
 
         public static PetGender fromString(String input) {
             if (input == null) {
-                throw new IllegalArgumentException("ERRO: Valor não pode ser nulo");
+                throw new IllegalArgumentException("Valor não pode ser nulo");
             }
 
             return switch (input.trim().toLowerCase()) {
@@ -174,17 +153,4 @@ public class Pet {
             };
         }
     }
-
-    public List<String> toLinhas() {
-        return List.of(
-                name,
-                String.valueOf(type),
-                String.valueOf(gender),
-                address,
-                age,
-                weight,
-                race
-        );
-    }
-
 }

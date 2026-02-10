@@ -1,10 +1,8 @@
-package main.services;
+package main.services.pet;
 
 import main.models.Pet;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -14,25 +12,23 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PetService {
 
-    public static void salvar(MontarPet montarPet, String pathFormulario, File diretorio) {
+    public static void salvar(
+            MontarPet montarPet,
+            GerarNome gerarNome,
+            File diretorio,
+            EscreverArquivo escreverArquivo,
+            RespostasUsuario respostasUsuario,
+            String pathFormulario,
+            LerFormulario lerFormulario,
+            Scanner scan) {
 
-        //Construtor
-        GerarNome gerarNome = new GerarNome();
-        LerFormulario lerFormulario = new LerFormulario();
-
-        Pet pet = montarPet.montar(lerFormulario, pathFormulario);
+        Pet pet = montarPet.montar(respostasUsuario, lerFormulario, pathFormulario, scan);
 
         String nomeArquivo = gerarNome.gerar(pet.getName());
+
         File arquivo = new File(diretorio, nomeArquivo);
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
-            for (String linha : pet.toLinhas()) {
-                bw.write(linha);
-                bw.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        escreverArquivo.escrever(arquivo, pet);
     }
 
     public static void atualizar(String pathPets) {
