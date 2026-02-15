@@ -10,5 +10,9 @@ public class FormService {
             AtualizarForm atualizarForm
     ) { atualizarForm.atualizar(scan, pathFormulario); }
 
+    public void alterarPergunta() {
+
+    }
+
 
 }

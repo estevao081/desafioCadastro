@@ -15,7 +15,9 @@ public class MenuPet {
             GerarNome gerarNome,
             EscreverArquivo escreverArquivo,
             RespostasUsuario respostasUsuario,
-            LerFormulario lerFormulario) {
+            LerFormulario lerFormulario,
+            AlterarArquivo alterarArquivo,
+            ValidarNumero validarNumero) {
 
         while (true) {
 
@@ -33,17 +35,10 @@ public class MenuPet {
             String opcaoPet = scan.nextLine();
 
             switch (opcaoPet) {
-                case "1" -> PetService.salvar(
-                        montarPet,
-                        gerarNome,
-                        diretorio,
-                        escreverArquivo,
-                        respostasUsuario,
-                        pathFormulario,
-                        lerFormulario,
-                        scan);
+                case "1" -> PetService.salvar(montarPet, gerarNome, diretorio, escreverArquivo,
+                        respostasUsuario, pathFormulario, lerFormulario, scan);
 
-                case "2" -> PetService.atualizar(pathPets);
+                case "2" -> PetService.atualizar(pathPets, scan, gerarNome, alterarArquivo, validarNumero);
 
                 case "3" -> PetService.deletar(pathPets);
 

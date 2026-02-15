@@ -12,15 +12,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PetService {
 
-    public static void salvar(
-            MontarPet montarPet,
-            GerarNome gerarNome,
-            File diretorio,
-            EscreverArquivo escreverArquivo,
-            RespostasUsuario respostasUsuario,
-            String pathFormulario,
-            LerFormulario lerFormulario,
-            Scanner scan) {
+    public static void salvar(MontarPet montarPet, GerarNome gerarNome, File diretorio,
+                              EscreverArquivo escreverArquivo, RespostasUsuario respostasUsuario,
+                              String pathFormulario, LerFormulario lerFormulario, Scanner scan) {
 
         Pet pet = montarPet.montar(respostasUsuario, lerFormulario, pathFormulario, scan);
 
@@ -31,10 +25,8 @@ public class PetService {
         escreverArquivo.escrever(arquivo, pet);
     }
 
-    public static void atualizar(String pathPets) {
-
-        Scanner scanner = new Scanner(System.in);
-        GerarNome gerarNome = new GerarNome();
+    public static void atualizar(String pathPets, Scanner scan, GerarNome gerarNome,
+                                 AlterarArquivo alterarArquivo, ValidarNumero validarNumero) {
 
         //Utiliza o metodo buscarPet para encontrar o pet com as informações a serem atualizadas
         List<String> pets = buscar(pathPets);
@@ -46,23 +38,28 @@ public class PetService {
 
         //Seleciona o pet com base no índice mostrado no console
         System.out.println("Informe o número do pet que deseja alterar:");
-        int opcaoPet = Integer.parseInt(scanner.nextLine()) - 1;
 
-        if (opcaoPet < 0 || opcaoPet >= pets.size()) {
-            System.out.println("Opção inválida.");
+        String opcaoPetString = scan.nextLine();
+        if (opcaoPetString == null || !opcaoPetString.matches("\\d+")) {
+            System.out.println("ERRO: Digite apenas números");
+            return;
+        }
+        int opcaoPet = validarNumero.validarOpcaoPet(opcaoPetString, pets.size());
+
+        if (opcaoPet >= pets.size()) {
+            System.out.println("ERRO: Opção inválida");
             return;
         }
 
         //Remove o índice dos dados do pet
-        String petSelecionado = pets.get(opcaoPet)
-                .replaceFirst("^\\d+\\. ", "");
+        String petSelecionado = pets.get(opcaoPet).replaceFirst("^\\d+\\. ", "");
 
         List<String> campos = List.of(
                 "Nome",
+                "Endereço",
                 "Idade",
                 "Peso",
-                "Raça",
-                "Endereço"
+                "Raça"
         );
 
         System.out.println("Qual campo deseja alterar?");
@@ -70,50 +67,17 @@ public class PetService {
             System.out.println((i + 1) + " - " + campos.get(i));
         }
 
-        int campo = Integer.parseInt(scanner.nextLine()) - 1;
-
-        if (campo < 0 || campo >= campos.size()) {
-            System.out.println("Campo inválido.");
+        String campoString = scan.nextLine();
+        if (campoString == null || !campoString.matches("\\d+")) {
+            System.out.println("ERRO: Digite apenas números");
             return;
         }
+        int campo = validarNumero.validarCampoPet(campoString);
 
         System.out.println("Informe o novo valor:");
-        String novoValor = scanner.nextLine().toUpperCase();
+        String novoValor = scan.nextLine().toUpperCase();
 
-        try {
-            Files.walk(Paths.get(pathPets))
-                    .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".TXT"))
-                    .forEach(filePath -> {
-                        try {
-
-                            List<String> linhas = Files.readAllLines(filePath);
-
-                            if (!linhas.toString().equalsIgnoreCase(petSelecionado)) return;
-
-                            linhas.set(campo, novoValor);
-                            Files.write(filePath, linhas);
-
-                            //Atualiza o nome do arquivo caso o nome do pet seja alterado
-                            if (campo == 0) {
-                                String novoNomeArquivo =
-                                        gerarNome.gerar(novoValor + ".txt");
-
-                                Path novoPath = filePath.resolveSibling(novoNomeArquivo);
-
-                                Files.move(filePath, novoPath);
-                            }
-
-                            System.out.println("Pet alterado com sucesso!");
-
-                        } catch (IOException e) {
-                            System.err.println("ERRO: " + e.getMessage());
-                        }
-                    });
-
-        } catch (IOException e) {
-            System.err.println("ERRO: " + e.getMessage());
-        }
+        alterarArquivo.alterar(pathPets, petSelecionado, campo, novoValor, gerarNome);
     }
 
     public static void listarTodos(String pathPets) {
@@ -144,7 +108,7 @@ public class PetService {
         List<String> pets = buscar(pathPets);
 
         if (pets.isEmpty()) {
-            System.out.println("Nenhum pet encontrado.");
+            System.out.println("Nenhum pet encontrado");
             return;
         }
 
@@ -304,6 +268,11 @@ public class PetService {
         resultado.forEach(pet ->
                 System.out.println(pet.replace("[", "").replace("]", ""))
         );
+
+        if (resultado.isEmpty()) {
+            System.out.println("Nenhum pet encontrado");
+        }
+
         return resultado;
     }
 
@@ -320,7 +289,6 @@ public class PetService {
             String nomeArquivo = file.getFileName().toString().toUpperCase();
 
             for (String criterio : criterios) {
-
                 // Data de cadastro → nome do arquivo
                 if (criterio.matches("\\d{8}")) {
                     if (!nomeArquivo.contains(criterio)) return;

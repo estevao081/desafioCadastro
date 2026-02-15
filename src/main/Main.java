@@ -29,8 +29,10 @@ public class Main {
         GerarNome gerarNome = new GerarNome();
         EscreverArquivo escreverArquivo = new EscreverArquivo();
         RespostasUsuario respostasUsuario = new RespostasUsuario();
-        LerFormulario lerFormulario = new LerFormulario();
+        AlterarArquivo alterarArquivo = new AlterarArquivo();
+        ValidarNumero validarNumero = new ValidarNumero();
         //Formulário
+        LerFormulario lerFormulario = new LerFormulario();
         AtualizarForm atualizarForm = new AtualizarForm();
 
         //Menu principal
@@ -44,7 +46,9 @@ public class Main {
                 escreverArquivo,
                 respostasUsuario,
                 lerFormulario,
-                atualizarForm
+                atualizarForm,
+                alterarArquivo,
+                validarNumero
         );
     }
 }

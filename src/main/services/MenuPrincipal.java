@@ -20,7 +20,9 @@ public class MenuPrincipal {
             EscreverArquivo escreverArquivo,
             RespostasUsuario respostasUsuario,
             LerFormulario lerFormulario,
-            AtualizarForm atualizarForm
+            AtualizarForm atualizarForm,
+            AlterarArquivo alterarArquivo,
+            ValidarNumero validarNumero
     ) {
 
         List<String> perguntas = List.of(
@@ -44,7 +46,9 @@ public class MenuPrincipal {
                     gerarNome,
                     escreverArquivo,
                     respostasUsuario,
-                    lerFormulario);
+                    lerFormulario,
+                    alterarArquivo,
+                    validarNumero);
             case "2" -> MenuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
             case "3" -> System.out.println("Encerrando");
         }
