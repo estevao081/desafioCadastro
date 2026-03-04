@@ -2,6 +2,9 @@ package main.models;
 
 import main.exceptions.*;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.*;
 
 public class Pet {
@@ -15,6 +18,7 @@ public class Pet {
     private String age;
     private String weight;
     private String race;
+    private String registrationDate;
     private final Map<String, String> atributosExtras;
 
     public Pet() {
@@ -41,10 +45,6 @@ public class Pet {
         this.name = normalize(name).toUpperCase();
     }
 
-    public String getName() {
-        return name;
-    }
-
     public void setType(String input) {
         this.type = PetType.fromString(input);
     }
@@ -54,7 +54,7 @@ public class Pet {
     }
 
     public void setAddress(String address) {
-        if (!address.matches("^$|^[A-Za-zÀ-ÿ0-9\\s\\.]+,\\s*\\d+[A-Za-z0-9\\s\\-]*,\\s*[A-Za-zÀ-ÿ\\s]+$")) {
+        if (!address.matches("^(NÃO INFORMADO|[A-Za-zÀ-ÿ0-9\\s]+,\\s*[A-Za-zÀ-ÿ0-9\\s]+,\\s*[A-Za-zÀ-ÿ0-9\\s]+)?$")) {
             throw new InvalidAddressException();
         }
         this.address = normalize(address).toUpperCase();
@@ -73,6 +73,42 @@ public class Pet {
             throw new InvalidRaceException();
         }
         this.race = normalize(race).toUpperCase();
+    }
+
+    public void setRegistrationDate(String registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public PetType getType() {
+        return type;
+    }
+
+    public PetGender getGender() {
+        return gender;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public String getWeight() {
+        return weight;
+    }
+
+    public String getRace() {
+        return race;
+    }
+
+    public String getRegistrationDate() {
+        return registrationDate;
     }
 
     public void addAtributoExtra(String valor) {

@@ -1,5 +1,10 @@
 package main;
 
+import main.models.Campos;
+import main.models.Pet;
+import main.models.PetFiltro;
+import main.repositories.PetFileRepository;
+import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
 import main.services.form.AtualizarForm;
 import main.services.pet.*;
@@ -24,31 +29,18 @@ public class Main {
 
         //Construtores
         Scanner scan = new Scanner(System.in);
-        //Pet
         MontarPet montarPet = new MontarPet();
         GerarNome gerarNome = new GerarNome();
-        EscreverArquivo escreverArquivo = new EscreverArquivo();
-        RespostasUsuario respostasUsuario = new RespostasUsuario();
-        AlterarArquivo alterarArquivo = new AlterarArquivo();
-        ValidarNumero validarNumero = new ValidarNumero();
-        //Formulário
         LerFormulario lerFormulario = new LerFormulario();
         AtualizarForm atualizarForm = new AtualizarForm();
+        ValidarNumero validarNumero = new ValidarNumero();
+        RespostasUsuario respostasUsuario = new RespostasUsuario();
+        PercorrerArquivos percorrerArquivos = new PercorrerArquivos();
+        PetRepository petRepository = new PetFileRepository(diretorio, gerarNome, percorrerArquivos);
+        PetService petService = new PetService(petRepository);
 
         //Menu principal
-        MenuPrincipal.exibirMenu(
-                pathFormulario,
-                pathPets,
-                diretorio,
-                scan,
-                montarPet,
-                gerarNome,
-                escreverArquivo,
-                respostasUsuario,
-                lerFormulario,
-                atualizarForm,
-                alterarArquivo,
-                validarNumero
-        );
+        MenuPrincipal.exibirMenu(pathFormulario, pathPets, scan, montarPet, gerarNome, respostasUsuario, lerFormulario,
+                atualizarForm, validarNumero, petService, percorrerArquivos);
     }
 }

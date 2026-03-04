@@ -9,11 +9,8 @@ public class MontarPet {
 
     private static final int CAMPOS_PADRAO = 7;
 
-    public Pet montar(
-            RespostasUsuario respostasUsuario,
-            LerFormulario lerFormulario,
-            String pathFormulario,
-            Scanner scan) {
+    public Pet montar(RespostasUsuario respostasUsuario, LerFormulario lerFormulario,
+                      String pathFormulario, Scanner scan) {
 
         List<String> respostas = respostasUsuario.respostas(lerFormulario, pathFormulario, scan);
 
