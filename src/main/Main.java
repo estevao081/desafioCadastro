@@ -1,8 +1,5 @@
 package main;
 
-import main.models.Campos;
-import main.models.Pet;
-import main.models.PetFiltro;
 import main.repositories.PetFileRepository;
 import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
@@ -35,12 +32,22 @@ public class Main {
         AtualizarForm atualizarForm = new AtualizarForm();
         ValidarNumero validarNumero = new ValidarNumero();
         RespostasUsuario respostasUsuario = new RespostasUsuario();
-        PercorrerArquivos percorrerArquivos = new PercorrerArquivos();
-        PetRepository petRepository = new PetFileRepository(diretorio, gerarNome, percorrerArquivos);
+        PetRepository petRepository = new PetFileRepository(diretorio, gerarNome);
         PetService petService = new PetService(petRepository);
+        MenuPet menuPet = new MenuPet(
+                pathFormulario,
+                pathPets,
+                scan,
+                montarPet,
+                gerarNome,
+                respostasUsuario,
+                lerFormulario,
+                validarNumero,
+                petService
+        );
 
-        //Menu principal
-        MenuPrincipal.exibirMenu(pathFormulario, pathPets, scan, montarPet, gerarNome, respostasUsuario, lerFormulario,
-                atualizarForm, validarNumero, petService, percorrerArquivos);
+        MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, atualizarForm, pathFormulario);
+
+        menuPrincipal.exibir();
     }
 }

@@ -1,37 +1,51 @@
 package main.services;
 
-import main.models.Campos;
-import main.models.Pet;
-import main.models.PetFiltro;
 import main.services.form.AtualizarForm;
 import main.services.form.MenuForm;
-import main.services.pet.*;
+import main.services.pet.MenuPet;
 
-import java.util.List;
 import java.util.Scanner;
 
 public class MenuPrincipal {
 
-    public static void exibirMenu(String pathFormulario, String pathPets, Scanner scan,
-                                  MontarPet montarPet, GerarNome gerarNome, RespostasUsuario respostasUsuario,
-                                  LerFormulario lerFormulario, AtualizarForm atualizarForm, ValidarNumero validarNumero,
-                                  PetService petService, PercorrerArquivos percorrerArquivos) {
+    private final Scanner scan;
+    private final MenuPet menuPet;
+    private final AtualizarForm atualizarForm;
+    private final String pathFormulario;
 
-        List<String> perguntas = List.of(
-                "1 - Iniciar o sistema para cadastro de PETS",
-                "2 - Iniciar o sistema para alterar formulário",
-                "3 - Encerrar"
-        );
+    public MenuPrincipal(Scanner scan,
+                         MenuPet menuPet,
+                         AtualizarForm atualizarForm,
+                         String pathFormulario) {
 
-        perguntas.forEach(System.out::println);
+        this.scan = scan;
+        this.menuPet = menuPet;
+        this.atualizarForm = atualizarForm;
+        this.pathFormulario = pathFormulario;
+    }
 
-        String opcao = scan.nextLine();
+    public void exibir() {
 
-        switch (opcao) {
-            case "1" -> MenuPet.exibirMenuPet(pathFormulario, pathPets, scan, montarPet, gerarNome,
-                    respostasUsuario, lerFormulario, validarNumero, petService, percorrerArquivos);
-            case "2" -> MenuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
-            case "3" -> System.out.println("Encerrando");
+        while (true) {
+
+            System.out.println("1 - Iniciar o sistema para cadastro de PETS");
+            System.out.println("2 - Iniciar o sistema para alterar formulário");
+            System.out.println("3 - Encerrar");
+
+            String opcao = scan.nextLine();
+
+            switch (opcao) {
+                case "1" -> menuPet.exibir();
+
+                case "2" -> MenuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
+
+                case "3" -> {
+                    System.out.println("Encerrando...");
+                    return;
+                }
+
+                default -> System.out.println("Opção inválida");
+            }
         }
     }
 }
