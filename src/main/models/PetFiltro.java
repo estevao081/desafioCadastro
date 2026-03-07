@@ -1,6 +1,10 @@
 package main.models;
 
+import java.util.*;
+
 public class PetFiltro {
+
+    private static final String NA = "NÃO INFORMADO";
 
     private String nome;
     private String tipo;
@@ -10,6 +14,23 @@ public class PetFiltro {
     private String peso;
     private String raca;
     private String dataDeCadastro;
+    private final Map<String, String> atributosExtras;
+
+    public PetFiltro() {
+        this.atributosExtras = new LinkedHashMap<>();
+    }
+
+    public void addAtributoExtra(String valor) {
+        if (valor == null || valor.isBlank()) {
+            atributosExtras.put(UUID.randomUUID().toString(), NA);
+        } else {
+            atributosExtras.put(UUID.randomUUID().toString(), valor.trim());
+        }
+    }
+
+    public Collection<String> getAtributosExtras() {
+        return Collections.unmodifiableCollection(atributosExtras.values());
+    }
 
     @Override
     public String toString() {
@@ -19,8 +40,8 @@ public class PetFiltro {
                 endereco + ", " +
                 idade + ", " +
                 peso + ", " +
-                raca + ", " +
-                dataDeCadastro;
+                raca +
+                getAtributosExtras().toString().replace("[", ", ").replace("]", "");
     }
 
     public String getNome() {

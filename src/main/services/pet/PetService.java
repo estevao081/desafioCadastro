@@ -103,6 +103,7 @@ public class PetService {
                 System.out.println("Informe a data de cadastro do pet:");
                 filtro.setDataDeCadastro(scan.nextLine());
             }
+            default -> System.out.println("Informe uma opção válida");
         }
 
         return filtro;

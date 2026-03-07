@@ -25,8 +25,7 @@ public class Pet {
         this.atributosExtras = new LinkedHashMap<>();
     }
 
-    public Pet(String name, PetType type, PetGender gender,
-               String address, String age, String weight, String race) {
+    public Pet(String name, PetType type, PetGender gender, String address, String age, String weight, String race) {
 
         this();
         this.name = name;

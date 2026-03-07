@@ -4,6 +4,7 @@ import main.repositories.PetFileRepository;
 import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
 import main.services.form.AtualizarForm;
+import main.services.form.MenuForm;
 import main.services.pet.*;
 
 import java.io.File;
@@ -46,7 +47,9 @@ public class Main {
                 petService
         );
 
-        MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, atualizarForm, pathFormulario);
+        MenuForm menuForm = new MenuForm();
+
+        MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, menuForm, atualizarForm, pathFormulario);
 
         menuPrincipal.exibir();
     }

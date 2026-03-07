@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -21,14 +23,14 @@ public class PetFileRepository implements PetRepository {
     private final File diretorio;
     private final GerarNome gerarNome;
 
-    public PetFileRepository(File diretorio,
-                             GerarNome gerarNome) {
+    public PetFileRepository(File diretorio, GerarNome gerarNome) {
         this.diretorio = diretorio;
         this.gerarNome = gerarNome;
     }
 
     @Override
     public void salvar(Pet pet) {
+
         String nomeArquivo = gerarNome.gerar(pet.getName());
         File arquivo = new File(diretorio, nomeArquivo);
 
@@ -40,6 +42,8 @@ public class PetFileRepository implements PetRepository {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        System.out.println("Pet salvo com sucesso!");
     }
 
     @Override
@@ -125,7 +129,13 @@ public class PetFileRepository implements PetRepository {
     @Override
     public List<PetFiltro> buscar(PetFiltro filtro) {
 
-        return listarTodos().stream()
+        List<PetFiltro> pets = listarTodos();
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado!");
+        }
+
+        return pets.stream()
                 .filter(p -> campoBate(filtro.getNome(), p.getNome()))
                 .filter(p -> campoBate(filtro.getTipo(), p.getTipo()))
                 .filter(p -> campoBate(filtro.getGenero(), p.getGenero()))
@@ -134,6 +144,8 @@ public class PetFileRepository implements PetRepository {
                 .filter(p -> campoBate(filtro.getRaca(), p.getRaca()))
                 .filter(p -> campoBate(filtro.getEndereco(), p.getEndereco()))
                 .filter(p -> campoBate(filtro.getDataDeCadastro(), p.getDataDeCadastro()))
+                .filter(p -> campoBate(filtro.getAtributosExtras().toString(),
+                        p.getAtributosExtras().toString()))
                 .toList();
     }
 
@@ -163,13 +175,22 @@ public class PetFileRepository implements PetRepository {
             pet.setIdade(String.valueOf(linhas.get(4)));
             pet.setPeso(String.valueOf(linhas.get(5)));
             pet.setRaca(linhas.get(6));
-            pet.setDataDeCadastro(file.getFileName().toString().substring(0, 8));
+            pet.setDataDeCadastro(formatarData(file.getFileName().toString().substring(0, 8)));
+
+            for (int i = 7; i < linhas.size(); i++) {
+                pet.addAtributoExtra(linhas.get(i));
+            }
 
             return pet;
 
         } catch (IOException e) {
             throw new RuntimeException("Erro ao converter arquivo: " + file, e);
         }
+    }
+
+    private String formatarData(String data) {
+        return LocalDate.parse(data, DateTimeFormatter.ofPattern("yyyyMMdd"))
+                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
     }
 }
 

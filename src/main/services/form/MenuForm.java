@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class MenuForm {
 
-    public static void exibirMenuForm(Scanner scan, String pathFormulario, AtualizarForm atualizarForm) {
+    public void exibirMenuForm(Scanner scan, String pathFormulario, AtualizarForm atualizarForm) {
 
         while (true) {
 

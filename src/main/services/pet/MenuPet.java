@@ -86,9 +86,7 @@ public class MenuPet {
     }
 
     private void buscar() {
-        List<PetFiltro> petFiltroList =
-                petService.buscar(petService.menuDeBuscaPetFiltro(scan));
-
+        List<PetFiltro> petFiltroList = petService.buscar(petService.menuDeBuscaPetFiltro(scan));
         petFiltroList.forEach(System.out::println);
     }
 }

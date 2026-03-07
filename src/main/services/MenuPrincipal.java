@@ -10,16 +10,19 @@ public class MenuPrincipal {
 
     private final Scanner scan;
     private final MenuPet menuPet;
+    private final MenuForm menuForm;
     private final AtualizarForm atualizarForm;
     private final String pathFormulario;
 
     public MenuPrincipal(Scanner scan,
                          MenuPet menuPet,
+                         MenuForm menuForm,
                          AtualizarForm atualizarForm,
                          String pathFormulario) {
 
         this.scan = scan;
         this.menuPet = menuPet;
+        this.menuForm = menuForm;
         this.atualizarForm = atualizarForm;
         this.pathFormulario = pathFormulario;
     }
@@ -37,7 +40,7 @@ public class MenuPrincipal {
             switch (opcao) {
                 case "1" -> menuPet.exibir();
 
-                case "2" -> MenuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
+                case "2" -> menuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
 
                 case "3" -> {
                     System.out.println("Encerrando...");
