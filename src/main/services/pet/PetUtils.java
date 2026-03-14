@@ -167,22 +167,32 @@ public class PetUtils {
 
     public String retornarPetParaAtualizar(Scanner scan, List<PetFiltro> petFiltroList) {
 
-        PetFiltro filtro;
-
         int contador = 1;
         for (PetFiltro petFiltro : petFiltroList) {
-            System.out.println(contador++ + " - " + petFiltro.toString());
-        }
-        System.out.println("Digite o índice do pet que deseja atualizar:");
-        String identificador = scan.nextLine();
-
-        if(Integer.valueOf(identificador) <= 0 || Integer.valueOf(identificador) > petFiltroList.size()) {
-            System.out.println("ERRO: Informe um índice válido!");
+            System.out.println(contador++ + " - " + petFiltro);
         }
 
-        filtro = petFiltroList.get(Integer.parseInt(identificador) - 1);
+        while (true) {
 
-        return filtro.getNome();
+            System.out.println("Digite o índice do pet que deseja atualizar:");
+            String identificador = scan.nextLine();
+
+            try {
+
+                int indice = Integer.parseInt(identificador);
+
+                if (indice < 1 || indice > petFiltroList.size()) {
+                    System.out.println("ERRO: Índice inválido.");
+                    continue;
+                }
+
+                PetFiltro filtro = petFiltroList.get(indice - 1);
+                return filtro.getNome();
+
+            } catch (NumberFormatException e) {
+                System.out.println("ERRO: Informe um número válido.");
+            }
+        }
     }
 
     public String normalizarCampos() {
@@ -190,16 +200,5 @@ public class PetUtils {
                 .replace("[", "")
                 .replace("]", "")
                 .replace("_", " ");
-    }
-
-    public Integer validarOpcaoPet(String input, int tamanhoLista) {
-
-        int indice = Integer.parseInt(input) - 1;
-
-        if (indice < 0  || indice > tamanhoLista) {
-            System.out.println("ERRO: Informe uma opção válida");
-        }
-
-        return indice;
     }
 }
