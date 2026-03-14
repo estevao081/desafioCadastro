@@ -7,34 +7,13 @@ import java.util.Scanner;
 
 public class MenuPet {
 
-    private final String pathFormulario;
-    private final String pathPets;
     private final Scanner scan;
-    private final MontarPet montarPet;
-    private final GerarNome gerarNome;
-    private final RespostasUsuario respostasUsuario;
-    private final LerFormulario lerFormulario;
-    private final ValidarNumero validarNumero;
     private final PetService petService;
 
-    public MenuPet(String pathFormulario,
-                   String pathPets,
-                   Scanner scan,
-                   MontarPet montarPet,
-                   GerarNome gerarNome,
-                   RespostasUsuario respostasUsuario,
-                   LerFormulario lerFormulario,
-                   ValidarNumero validarNumero,
-                   PetService petService) {
-
-        this.pathFormulario = pathFormulario;
-        this.pathPets = pathPets;
+    public MenuPet(
+            Scanner scan,
+            PetService petService) {
         this.scan = scan;
-        this.montarPet = montarPet;
-        this.gerarNome = gerarNome;
-        this.respostasUsuario = respostasUsuario;
-        this.lerFormulario = lerFormulario;
-        this.validarNumero = validarNumero;
         this.petService = petService;
     }
 
@@ -59,7 +38,7 @@ public class MenuPet {
 
                 case "3" -> deletar();
 
-                case "4" -> petService.listarTodos();
+                case "4" -> listar();
 
                 case "5" -> buscar();
 
@@ -74,19 +53,23 @@ public class MenuPet {
     }
 
     private void cadastrar() {
-        petService.salvar(montarPet, respostasUsuario, lerFormulario, pathFormulario, scan);
+        petService.salvar();
     }
 
     private void atualizar() {
-        petService.atualizar(pathPets, scan, gerarNome, validarNumero);
+        petService.atualizar();
     }
 
     private void deletar() {
-        petService.deletar(pathPets, scan);
+        petService.deletar();
+    }
+
+    private void listar() {
+        petService.listarTodos();
     }
 
     private void buscar() {
-        List<PetFiltro> petFiltroList = petService.buscar(petService.menuDeBuscaPetFiltro(scan));
+        List<PetFiltro> petFiltroList = petService.buscar();
         petFiltroList.forEach(System.out::println);
     }
 }

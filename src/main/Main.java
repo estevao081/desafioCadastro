@@ -1,5 +1,6 @@
 package main;
 
+import main.models.PetFiltro;
 import main.repositories.PetFileRepository;
 import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
@@ -11,7 +12,7 @@ import java.io.File;
 import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) {
+    static void main(String[] args) {
 
         //Paths
         final String pathFormulario = "src/main/forms/FORMULARIO.TXT";
@@ -26,26 +27,29 @@ public class Main {
         }
 
         //Construtores
+        PetUtils petUtils = new PetUtils();
         Scanner scan = new Scanner(System.in);
         MontarPet montarPet = new MontarPet();
         GerarNome gerarNome = new GerarNome();
         LerFormulario lerFormulario = new LerFormulario();
         AtualizarForm atualizarForm = new AtualizarForm();
-        ValidarNumero validarNumero = new ValidarNumero();
         RespostasUsuario respostasUsuario = new RespostasUsuario();
-        PetRepository petRepository = new PetFileRepository(diretorio, gerarNome);
-        PetService petService = new PetService(petRepository);
-        MenuPet menuPet = new MenuPet(
-                pathFormulario,
-                pathPets,
-                scan,
-                montarPet,
+        PetRepository petRepository = new PetFileRepository(
+                diretorio,
                 gerarNome,
+                petUtils,
+                pathPets);
+
+        PetService petService = new PetService(
+                petRepository,
+                montarPet,
                 respostasUsuario,
                 lerFormulario,
-                validarNumero,
-                petService
-        );
+                pathFormulario,
+                scan,
+                petUtils);
+
+        MenuPet menuPet = new MenuPet(scan, petService);
 
         MenuForm menuForm = new MenuForm();
 
