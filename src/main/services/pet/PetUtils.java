@@ -10,14 +10,39 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
 public class PetUtils {
 
     public boolean campoBate(String filtro, String valor) {
-        return filtro == null || filtro.isBlank() ||
-                valor.contains(filtro);
+        return filtro == null || filtro.isBlank() || valor.contains(filtro);
+    }
+
+    public boolean atributosExtrasBatem(
+            Collection<String> filtro,
+            Collection<String> valor) {
+
+        if (filtro == null || filtro.isEmpty()) {
+            return true;
+        }
+
+        if (valor == null || valor.isEmpty()) {
+            return false;
+        }
+
+        for (String atributoFiltro : filtro) {
+
+            boolean encontrou = valor.stream()
+                    .anyMatch(v -> v.toUpperCase().contains(atributoFiltro.toUpperCase()));
+
+            if (!encontrou) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public PetFiltro converterArquivoParaPet(Path file) {

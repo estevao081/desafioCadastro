@@ -133,8 +133,9 @@ public class PetFileRepository implements PetRepository {
                 .filter(p -> petUtils.campoBate(filtro.getRaca(), p.getRaca()))
                 .filter(p -> petUtils.campoBate(filtro.getEndereco(), p.getEndereco()))
                 .filter(p -> petUtils.campoBate(filtro.getDataDeCadastro(), p.getDataDeCadastro()))
-                .filter(p -> petUtils.campoBate(filtro.getAtributosExtras().toString(),
-                        p.getAtributosExtras().toString()))
+                .filter(p -> petUtils.atributosExtrasBatem(
+                        filtro.getAtributosExtras(),
+                        p.getAtributosExtras()))
                 .toList();
     }
 }
