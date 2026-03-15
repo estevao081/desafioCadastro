@@ -77,44 +77,31 @@ public class MenuPet {
         List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
 
         if (petFiltroList.isEmpty()) {
-            System.out.println("Nenhum pet encontrado");
+            System.out.println("Nenhum pet encontrado!");
             return;
         }
 
-        String petSelecionado = petUtils.retornarPetParaAtualizar(scan, petFiltroList);
+        PetFiltro petSelecionado = petUtils.retornarPetComIndiceValidado(scan, petFiltroList);
 
         int campo = petUtils.retornarCampo(scan);
 
         String novoValor = petUtils.retornarNovoValor(scan, campo);
 
-        petService.atualizar(petSelecionado, campo, novoValor);
+        petService.atualizar(petSelecionado.getNome(), campo, novoValor);
         System.out.println("Pet atualizado com sucesso!");
     }
 
     private void deletar() {
 
-        PetFiltro filtro;
-
         List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
 
         if (petFiltroList.isEmpty()) {
-            System.out.println("Nenhum pet encontrado");
+            System.out.println("Nenhum pet encontrado!");
             return;
         }
 
-        int contador = 1;
-
-        for (PetFiltro petFiltro : petFiltroList) {
-            System.out.println(contador++ + " - " + petFiltro.toString());
-        }
-
-        System.out.println("Digite o índice do pet que deseja remover:");
-        String identificador = scan.nextLine();
-
-        filtro = petFiltroList.get(Integer.parseInt(identificador) - 1);
-
-        petService.deletar(filtro);
-        System.out.println("Pet removido com sucesso!");
+        petService.deletar(petUtils.retornarPetComIndiceValidado(scan, petFiltroList));
+        System.out.println("Pet deletado com sucesso!");
     }
 
     private void listar() {
@@ -122,7 +109,7 @@ public class MenuPet {
         List<PetFiltro> pets = petService.listarTodos();
 
         if (pets.isEmpty()) {
-            System.out.println("Nenhum pet encontrado");
+            System.out.println("Nenhum pet encontrado!");
             return;
         }
 
@@ -137,7 +124,7 @@ public class MenuPet {
         List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
 
         if (petFiltroList.isEmpty()) {
-            System.out.println("Nenhum pet encontrado");
+            System.out.println("Nenhum pet encontrado!");
             return;
         }
 

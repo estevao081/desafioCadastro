@@ -165,7 +165,7 @@ public class PetUtils {
         return campo;
     }
 
-    public String retornarPetParaAtualizar(Scanner scan, List<PetFiltro> petFiltroList) {
+    public PetFiltro retornarPetComIndiceValidado(Scanner scan, List<PetFiltro> petFiltroList) {
 
         int contador = 1;
         for (PetFiltro petFiltro : petFiltroList) {
@@ -174,7 +174,7 @@ public class PetUtils {
 
         while (true) {
 
-            System.out.println("Digite o índice do pet que deseja atualizar:");
+            System.out.println("Digite o índice do pet:");
             String identificador = scan.nextLine();
 
             try {
@@ -186,8 +186,7 @@ public class PetUtils {
                     continue;
                 }
 
-                PetFiltro filtro = petFiltroList.get(indice - 1);
-                return filtro.getNome();
+                return petFiltroList.get(indice - 1);
 
             } catch (NumberFormatException e) {
                 System.out.println("ERRO: Informe um número válido.");
