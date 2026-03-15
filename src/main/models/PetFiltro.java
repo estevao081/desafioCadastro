@@ -34,14 +34,20 @@ public class PetFiltro {
 
     @Override
     public String toString() {
-        return nome + ", " +
-                tipo + ", " +
-                genero + ", " +
-                endereco + ", " +
-                idade + ", " +
-                peso + ", " +
-                raca +
-                getAtributosExtras().toString().replace("[", ", ").replace("]", "");
+
+        StringJoiner joiner = new StringJoiner(", ");
+
+        joiner.add(nome);
+        joiner.add(tipo);
+        joiner.add(genero);
+        joiner.add(endereco);
+        joiner.add(idade);
+        joiner.add(peso);
+        joiner.add(raca);
+
+        atributosExtras.values().forEach(joiner::add);
+
+        return joiner.toString();
     }
 
     public String getNome() {

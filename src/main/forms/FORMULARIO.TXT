@@ -6,3 +6,4 @@
 6 - Qual o peso aproximado do pet?
 7 - Qual a raça do pet?
 EXTRA - vacinado?
+EXTRA - doente?

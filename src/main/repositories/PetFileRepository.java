@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PetFileRepository implements PetRepository {
@@ -34,13 +35,10 @@ public class PetFileRepository implements PetRepository {
     public void salvar(Pet pet) {
 
         String nomeArquivo = gerarNome.gerar(pet.getName());
-        File arquivo = new File(pathPets, nomeArquivo);
+        Path arquivo = Paths.get(pathPets, nomeArquivo);
 
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
-            for (String linha : pet.toLinhas()) {
-                bw.write(linha);
-                bw.newLine();
-            }
+        try {
+            Files.write(arquivo, pet.toLinhas());
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar pet", e);
         }

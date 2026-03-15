@@ -8,9 +8,7 @@ import java.util.Scanner;
 
 public class AtualizarForm {
 
-    public void atualizar(
-            Scanner scan,
-            String pathFormulario) {
+    public void atualizar(Scanner scan, String pathFormulario) {
 
         System.out.println("Digite a pergunta que deseja adicionar ao formulário:");
 
@@ -22,13 +20,11 @@ public class AtualizarForm {
                     .filter(p -> p.toString().endsWith(".TXT"))
                     .forEach(filePath -> {
                         try {
-                            //Conteúdo do formulário
+
                             List<String> linhas = Files.readAllLines(filePath);
 
-                            //Adiciona uma linha em branco para ser substituída pela pergunta a ser adicionada
-                            linhas.add("");
+                            linhas.add("EXTRA - " + resposta);
 
-                            linhas.set(linhas.size() - 1, "EXTRA - " + resposta);
                             Files.write(filePath, linhas);
 
                             System.out.println("Formulário alterado com sucesso!");
