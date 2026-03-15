@@ -17,17 +17,14 @@ import java.util.List;
 
 public class PetFileRepository implements PetRepository {
 
-    private final File diretorio;
     private final GerarNome gerarNome;
     private final PetUtils petUtils;
     private final String pathPets;
 
     public PetFileRepository(
-            File diretorio,
             GerarNome gerarNome,
             PetUtils petUtils,
             String pathPets) {
-        this.diretorio = diretorio;
         this.gerarNome = gerarNome;
         this.petUtils = petUtils;
         this.pathPets = pathPets;
@@ -37,7 +34,7 @@ public class PetFileRepository implements PetRepository {
     public void salvar(Pet pet) {
 
         String nomeArquivo = gerarNome.gerar(pet.getName());
-        File arquivo = new File(diretorio, nomeArquivo);
+        File arquivo = new File(pathPets, nomeArquivo);
 
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(arquivo))) {
             for (String linha : pet.toLinhas()) {
@@ -45,7 +42,7 @@ public class PetFileRepository implements PetRepository {
                 bw.newLine();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erro ao salvar pet", e);
         }
     }
 
@@ -105,7 +102,9 @@ public class PetFileRepository implements PetRepository {
 
     @Override
     public List<PetFiltro> listarTodos() {
+
         List<PetFiltro> pets = new ArrayList<>();
+
         try (var paths = Files.walk(Paths.get(pathPets))) {
             paths
                     .filter(Files::isRegularFile)

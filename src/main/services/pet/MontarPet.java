@@ -7,10 +7,22 @@ import java.util.Scanner;
 
 public class MontarPet {
 
+    private final RespostasUsuario respostasUsuario;
+    private final LerFormulario lerFormulario;
+    private final String pathFormulario;
+
+    public MontarPet(
+            RespostasUsuario respostasUsuario,
+            LerFormulario lerFormulario,
+            String pathFormulario) {
+        this.respostasUsuario = respostasUsuario;
+        this.lerFormulario = lerFormulario;
+        this.pathFormulario = pathFormulario;
+    }
+
     private static final int CAMPOS_PADRAO = 7;
 
-    public Pet montar(RespostasUsuario respostasUsuario, LerFormulario lerFormulario,
-                      String pathFormulario, Scanner scan) {
+    public Pet montar(Scanner scan) {
 
         List<String> respostas = respostasUsuario.respostas(lerFormulario, pathFormulario, scan);
 

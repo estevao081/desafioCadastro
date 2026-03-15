@@ -1,5 +1,6 @@
 package main.services.pet;
 
+import main.models.Pet;
 import main.models.PetFiltro;
 
 import java.util.List;
@@ -9,24 +10,35 @@ public class MenuPet {
 
     private final Scanner scan;
     private final PetService petService;
+    private final MontarPet montarPet;
+    private final PetUtils petUtils;
 
     public MenuPet(
             Scanner scan,
-            PetService petService) {
+            PetService petService,
+            MontarPet montarPet,
+            PetUtils petUtils
+    ) {
         this.scan = scan;
         this.petService = petService;
+        this.montarPet = montarPet;
+        this.petUtils = petUtils;
     }
 
     public void exibir() {
 
         while (true) {
 
-            System.out.println("1.Cadastrar um novo pet");
-            System.out.println("2.Alterar os dados do pet cadastrado");
-            System.out.println("3.Deletar um pet cadastrado");
-            System.out.println("4.Listar todos os pets cadastrados");
-            System.out.println("5.Listar pets por algum critério");
-            System.out.println("6.Sair");
+            List<String> opcoes = List.of(
+                    "1.Cadastrar um novo pet",
+                    "2.Alterar os dados do pet cadastrado",
+                    "3.Deletar um pet cadastrado",
+                    "4.Listar todos os pets cadastrados",
+                    "5.Listar pets por algum critério",
+                    "6.Sair"
+            );
+
+            opcoes.forEach(System.out::println);
 
             String opcaoPet = scan.nextLine();
 
@@ -53,23 +65,83 @@ public class MenuPet {
     }
 
     private void cadastrar() {
-        petService.salvar();
+
+        Pet pet = montarPet.montar(scan);
+
+        petService.salvar(pet);
+        System.out.println("Pet salvo com sucesso!");
     }
 
     private void atualizar() {
-        petService.atualizar();
+
+        List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
+
+        if (petFiltroList.isEmpty()) {
+            System.out.println("Nenhum pet encontrado");
+            return;
+        }
+
+        String petSelecionado = petUtils.retornarPetParaAtualizar(scan, petFiltroList);
+
+        int campo = petUtils.retornarCampo(scan);
+
+        String novoValor = petUtils.retornarNovoValor(scan, campo);
+
+        petService.atualizar(petSelecionado, campo, novoValor);
+        System.out.println("Pet atualizado com sucesso!");
     }
 
     private void deletar() {
-        petService.deletar();
+
+        PetFiltro filtro;
+
+        List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
+
+        if (petFiltroList.isEmpty()) {
+            System.out.println("Nenhum pet encontrado");
+            return;
+        }
+
+        int contador = 1;
+
+        for (PetFiltro petFiltro : petFiltroList) {
+            System.out.println(contador++ + " - " + petFiltro.toString());
+        }
+
+        System.out.println("Digite o índice do pet que deseja remover:");
+        String identificador = scan.nextLine();
+
+        filtro = petFiltroList.get(Integer.parseInt(identificador) - 1);
+
+        petService.deletar(filtro);
+        System.out.println("Pet removido com sucesso!");
     }
 
     private void listar() {
-        petService.listarTodos();
+
+        List<PetFiltro> pets = petService.listarTodos();
+
+        if (pets.isEmpty()) {
+            System.out.println("Nenhum pet encontrado");
+            return;
+        }
+
+        System.out.println("Pets encontrados:");
+        for (PetFiltro pet : pets) {
+            System.out.println(pet);
+        }
     }
 
     private void buscar() {
-        List<PetFiltro> petFiltroList = petService.buscar();
+
+        List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
+
+        if (petFiltroList.isEmpty()) {
+            System.out.println("Nenhum pet encontrado");
+            return;
+        }
+
+        System.out.println("Pets encontrados:");
         petFiltroList.forEach(System.out::println);
     }
 }

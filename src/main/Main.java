@@ -29,27 +29,23 @@ public class Main {
         //Construtores
         PetUtils petUtils = new PetUtils();
         Scanner scan = new Scanner(System.in);
-        MontarPet montarPet = new MontarPet();
         GerarNome gerarNome = new GerarNome();
         LerFormulario lerFormulario = new LerFormulario();
         AtualizarForm atualizarForm = new AtualizarForm();
         RespostasUsuario respostasUsuario = new RespostasUsuario();
+        MontarPet montarPet = new MontarPet(respostasUsuario, lerFormulario, pathFormulario);
         PetRepository petRepository = new PetFileRepository(
-                diretorio,
                 gerarNome,
                 petUtils,
                 pathPets);
 
-        PetService petService = new PetService(
-                petRepository,
-                montarPet,
-                respostasUsuario,
-                lerFormulario,
-                pathFormulario,
-                scan,
-                petUtils);
+        PetService petService = new PetService(petRepository);
 
-        MenuPet menuPet = new MenuPet(scan, petService);
+        MenuPet menuPet = new MenuPet(
+                scan,
+                petService,
+                montarPet,
+                petUtils);
 
         MenuForm menuForm = new MenuForm();
 
