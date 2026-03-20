@@ -126,8 +126,8 @@ public class Pet {
         linhas.add(String.valueOf(type));
         linhas.add(String.valueOf(gender));
         linhas.add(address);
-        linhas.add(age);
-        linhas.add(weight);
+        linhas.add(age + " anos");
+        linhas.add(weight + "kg");
         linhas.add(race);
 
         linhas.addAll(atributosExtras.values());

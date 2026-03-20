@@ -99,7 +99,14 @@ public class MenuPet {
             return;
         }
 
-        petService.deletar(petUtils.retornarPetComIndiceValidado(scan, petFiltroList));
+        PetFiltro pet = petUtils.retornarPetComIndiceValidado(scan, petFiltroList);
+
+        System.out.println("Tem certeza que deseja deletar o pet? (S/N)");
+        if(!scan.nextLine().equalsIgnoreCase("s")) {
+            return;
+        }
+
+        petService.deletar(pet);
         System.out.println("Pet deletado com sucesso!");
     }
 
