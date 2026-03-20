@@ -37,11 +37,9 @@ public class PetFileRepository implements PetRepository {
 
         String nomeArquivo = gerarNome.gerar(pet.getName());
         Path arquivo = Paths.get(pathPets, nomeArquivo);
-        LerFormulario lerFormulario = new LerFormulario();
-        String pertunta = lerFormulario.ler("src/main/forms/FORMULARIO.TXT").get(7);
-
+        
         try {
-            Files.write(arquivo, pet.toLinhas(pertunta));
+            Files.write(arquivo, pet.toLinhas());
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar pet", e);
         }
