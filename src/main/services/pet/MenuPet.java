@@ -55,7 +55,6 @@ public class MenuPet {
                 case "5" -> buscar();
 
                 case "6" -> {
-                    System.out.println("Encerrando...");
                     return;
                 }
 

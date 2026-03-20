@@ -43,11 +43,13 @@ public class MenuForm {
             switch (opcaoForm) {
                 case "1" -> adicionar();
                 case "2" -> alterar();
-                case "3" -> System.out.println("c");
-                case "4" -> System.out.println("d");
-                case "5" -> {
-                    System.out.println("Encerrando");
+                case "3" -> excluir();
+                case "4" -> {
                     return;
+                }
+                case "5" -> {
+                    System.out.println("Encerrando...");
+                    System.exit(0);
                 }
                 default -> System.out.println("ERRO: Informe uma opção válida!");
             }
@@ -68,13 +70,13 @@ public class MenuForm {
         try {
             List<String> perguntas = lerFormulario.ler(formUtils.getPathFormulario());
 
-            if (!validarPerguntasAlteraveis(perguntas)) {
+            if (!formUtils.validarPerguntasAlteraveis(perguntas)) {
                 return;
             }
 
-            exibirPerguntasAlteraveis(perguntas);
+            formUtils.exibirPerguntasAlteraveis(perguntas);
 
-            int indice = obterIndiceAlteracao(perguntas);
+            int indice = formUtils.obterIndiceAlteracao(perguntas);
             if (indice == -1) return;
 
             System.out.println("Digite a nova pergunta:");
@@ -90,37 +92,23 @@ public class MenuForm {
 
     private void excluir() {
 
-    }
+        try {
+            List<String> perguntas = lerFormulario.ler(formUtils.getPathFormulario());
 
-    private boolean validarPerguntasAlteraveis(List<String> perguntas) {
+            if (!formUtils.validarPerguntasAlteraveis(perguntas)) {
+                return;
+            }
 
-        if (perguntas.size() <= formUtils.getIndicePrimeiraPerguntaAlteravel()) {
-            System.out.println("Sem perguntas para alterar!");
-            return false;
-        }
-        return true;
-    }
+            formUtils.exibirPerguntasAlteraveis(perguntas);
 
-    private void exibirPerguntasAlteraveis(List<String> perguntas) {
+            int indice = formUtils.obterIndiceAlteracao(perguntas);
+            if (indice == -1) return;
 
-        System.out.println("Informe o índice da pergunta que deseja alterar:");
+            formService.excluir(indice);
+            System.out.println("Pergunta excluída com sucesso!");
 
-        for (int i = formUtils.getIndicePrimeiraPerguntaAlteravel(); i < perguntas.size(); i++) {
-            System.out.println(perguntas.get(i));
-        }
-    }
-
-    private int obterIndiceAlteracao(List<String> perguntas) {
-
-        String campo = scan.nextLine();
-        int indiceLinha = Integer.parseInt(campo) - 1;
-
-        if (indiceLinha < formUtils.getIndicePrimeiraPerguntaAlteravel() ||
-                indiceLinha >= perguntas.size()) {
+        } catch (NumberFormatException e) {
             System.out.println("ERRO: Índice inválido!");
-            return -1;
         }
-
-        return indiceLinha;
     }
 }

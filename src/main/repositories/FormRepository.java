@@ -6,5 +6,5 @@ public interface FormRepository {
 
     void alterar(int campo, String novoValor);
 
-    void excluir();
+    void excluir(int indicePergunta);
 }

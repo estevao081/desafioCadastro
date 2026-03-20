@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class FormFileRepository implements FormRepository {
@@ -19,29 +20,22 @@ public class FormFileRepository implements FormRepository {
     @Override
     public void adicionar(String pergunta) {
 
-        try (var paths = Files.walk(Paths.get(pathFormulario))) {
-            paths
-                    .filter(Files::isRegularFile)
-                    .filter(p -> p.toString().endsWith(".TXT"))
-                    .forEach(filePath -> {
-                        try {
+        Path arquivoFormulario = Paths.get(pathFormulario);
 
-                            List<String> linhas = Files.readAllLines(filePath);
+        try {
+            List<String> linhas = Files.readAllLines(arquivoFormulario);
 
-                            int campo = linhas.size() + 1;
+            int campo = linhas.size() + 1;
 
-                            linhas.add(campo + " - EXTRA - " + pergunta);
+            linhas.add(campo + " - EXTRA - " + pergunta);
 
-                            Files.write(filePath, linhas);
-
-                        } catch (IOException e) {
-                            System.err.println("ERRO: " + e.getMessage());
-                        }
-                    });
+            Files.write(arquivoFormulario, linhas);
 
         } catch (IOException e) {
             System.err.println("ERRO: " + e.getMessage());
         }
+
+
     }
 
     @Override
@@ -55,13 +49,36 @@ public class FormFileRepository implements FormRepository {
             Files.write(arquivoFormulario, linhas);
 
         } catch (IOException e) {
-            System.err.println("ERRO ao alterar arquivo: " + e.getMessage());
+            System.err.println("ERRO ao alterar pergunta: " + e.getMessage());
         }
     }
 
     @Override
-    public void excluir() {
+    public void excluir(int indicePergunta) {
 
+        Path arquivoFormulario = Paths.get(pathFormulario);
 
+        try {
+            List<String> linhas = Files.readAllLines(arquivoFormulario);
+
+            linhas.remove(indicePergunta);
+
+            List<String> linhasAtualizadas = new ArrayList<>();
+
+            for (int i = 0; i < linhas.size(); i++) {
+                String pergunta = linhas.get(i);
+
+                String textoPergunta = pergunta.substring(pergunta.indexOf("-") + 1).trim();
+
+                String novaPergunta = (i + 1) + " - " + textoPergunta;
+
+                linhasAtualizadas.add(novaPergunta);
+            }
+
+            Files.write(arquivoFormulario, linhasAtualizadas);
+
+        } catch (IOException e) {
+            System.err.println("ERRO ao remover pergunta: " + e.getMessage());
+        }
     }
 }

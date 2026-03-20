@@ -17,4 +17,8 @@ public class FormService {
     public void alterar(int campo, String novoValor) {
         formRepository.alterar(campo, novoValor);
     }
+
+    public void excluir(int indice) {
+        formRepository.excluir(indice);
+    }
 }

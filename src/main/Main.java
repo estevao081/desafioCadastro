@@ -33,7 +33,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         GerarNome gerarNome = new GerarNome();
         LerFormulario lerFormulario = new LerFormulario();
-        FormUtils formUtils = new FormUtils(pathFormulario);
+        FormUtils formUtils = new FormUtils(pathFormulario, scan);
         RespostasUsuario respostasUsuario = new RespostasUsuario();
         FormRepository formRepository = new FormFileRepository(pathFormulario);
         FormService formService = new FormService(formRepository);
