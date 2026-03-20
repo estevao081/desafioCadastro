@@ -70,7 +70,7 @@ public class FormFileRepository implements FormRepository {
 
                 String textoPergunta = pergunta.substring(pergunta.indexOf("-") + 1).trim();
 
-                String novaPergunta = (i + 1) + " - " + textoPergunta;
+                String novaPergunta = " " + (i + 1) + " - " + textoPergunta;
 
                 linhasAtualizadas.add(novaPergunta);
             }

@@ -5,3 +5,5 @@
 5 - Qual a idade aproximada do pet?
 6 - Qual o peso aproximado do pet?
 7 - Qual a raça do pet?
+8 - EXTRA - vacinado?
+9 - EXTRA - raiva?

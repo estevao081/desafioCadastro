@@ -3,6 +3,7 @@ package main.repositories;
 import main.models.Pet;
 import main.models.PetFiltro;
 import main.services.pet.GerarNome;
+import main.services.pet.LerFormulario;
 import main.services.pet.PetUtils;
 
 import java.io.BufferedWriter;
@@ -36,9 +37,11 @@ public class PetFileRepository implements PetRepository {
 
         String nomeArquivo = gerarNome.gerar(pet.getName());
         Path arquivo = Paths.get(pathPets, nomeArquivo);
+        LerFormulario lerFormulario = new LerFormulario();
+        String pertunta = lerFormulario.ler("src/main/forms/FORMULARIO.TXT").get(7);
 
         try {
-            Files.write(arquivo, pet.toLinhas());
+            Files.write(arquivo, pet.toLinhas(pertunta));
         } catch (IOException e) {
             throw new RuntimeException("Erro ao salvar pet", e);
         }

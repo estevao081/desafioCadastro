@@ -119,7 +119,7 @@ public class Pet {
         return Collections.unmodifiableCollection(atributosExtras.values());
     }
 
-    public List<String> toLinhas() {
+    public List<String> toLinhas(String pergunta) {
         List<String> linhas = new ArrayList<>();
 
         linhas.add(name);

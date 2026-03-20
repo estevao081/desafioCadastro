@@ -37,7 +37,10 @@ public class MontarPet {
         pet.setRace(respostas.get(6));
 
         for (int i = CAMPOS_PADRAO; i < respostas.size(); i++) {
-            pet.addAtributoExtra(respostas.get(i).toUpperCase());
+            pet.addAtributoExtra(
+                    "[EXTRA - "
+                            + lerFormulario.ler(pathFormulario).get(i).substring(12)
+                            + "] - " + respostas.get(i).toUpperCase());
         }
 
         return pet;
