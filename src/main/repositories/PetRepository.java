@@ -17,4 +17,3 @@ public interface PetRepository {
 
     List<PetFiltro> buscar(PetFiltro filtro);
 }
-

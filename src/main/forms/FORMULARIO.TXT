@@ -7,3 +7,4 @@
 7 - Qual a raça do pet?
 EXTRA - vacinado?
 EXTRA - doente?
+EXTRA - o pet é raivoso?

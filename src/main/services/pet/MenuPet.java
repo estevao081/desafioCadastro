@@ -113,22 +113,28 @@ public class MenuPet {
             return;
         }
 
+        int i = 1;
+
         System.out.println("Pets encontrados:");
         for (PetFiltro pet : pets) {
-            System.out.println(pet);
+            System.out.println(i++ + ". " + pet);
         }
     }
 
     private void buscar() {
 
-        List<PetFiltro> petFiltroList = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
+        List<PetFiltro> pets = petService.buscar(petUtils.menuDeBuscaPetFiltro(scan));
 
-        if (petFiltroList.isEmpty()) {
+        if (pets.isEmpty()) {
             System.out.println("Nenhum pet encontrado!");
             return;
         }
 
+        int i = 1;
+
         System.out.println("Pets encontrados:");
-        petFiltroList.forEach(System.out::println);
+        for (PetFiltro pet : pets) {
+            System.out.println(i++ + ". " + pet);
+        }
     }
 }

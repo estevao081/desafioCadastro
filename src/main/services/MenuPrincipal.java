@@ -1,6 +1,5 @@
 package main.services;
 
-import main.services.form.AtualizarForm;
 import main.services.form.MenuForm;
 import main.services.pet.MenuPet;
 
@@ -11,20 +10,14 @@ public class MenuPrincipal {
     private final Scanner scan;
     private final MenuPet menuPet;
     private final MenuForm menuForm;
-    private final AtualizarForm atualizarForm;
-    private final String pathFormulario;
 
     public MenuPrincipal(Scanner scan,
                          MenuPet menuPet,
-                         MenuForm menuForm,
-                         AtualizarForm atualizarForm,
-                         String pathFormulario) {
+                         MenuForm menuForm) {
 
         this.scan = scan;
         this.menuPet = menuPet;
         this.menuForm = menuForm;
-        this.atualizarForm = atualizarForm;
-        this.pathFormulario = pathFormulario;
     }
 
     public void exibir() {
@@ -40,7 +33,7 @@ public class MenuPrincipal {
             switch (opcao) {
                 case "1" -> menuPet.exibir();
 
-                case "2" -> menuForm.exibirMenuForm(scan, pathFormulario, atualizarForm);
+                case "2" -> menuForm.exibirMenuForm(scan);
 
                 case "3" -> {
                     System.out.println("Encerrando...");

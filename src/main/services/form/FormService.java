@@ -1,18 +1,20 @@
 package main.services.form;
 
-import java.util.Scanner;
+import main.repositories.FormRepository;
 
 public class FormService {
 
-    public static void adicionarPergunta(
-            Scanner scan,
-            String pathFormulario,
-            AtualizarForm atualizarForm
-    ) { atualizarForm.atualizar(scan, pathFormulario); }
+    private final FormRepository formRepository;
 
-    public void alterarPergunta() {
-
+    public FormService(FormRepository formRepository) {
+        this.formRepository = formRepository;
     }
 
+    public void adicionar(String resposta) {
+        formRepository.adicionar(resposta);
+    }
 
+    public void alterar() {
+
+    }
 }

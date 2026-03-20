@@ -35,7 +35,7 @@ public class PetFiltro {
     @Override
     public String toString() {
 
-        StringJoiner joiner = new StringJoiner(", ");
+        StringJoiner joiner = new StringJoiner(" - ");
 
         joiner.add(nome);
         joiner.add(tipo);

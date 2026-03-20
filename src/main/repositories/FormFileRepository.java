@@ -1,21 +1,26 @@
-package main.services.form;
+package main.repositories;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
-import java.util.Scanner;
 
-public class AtualizarForm {
+public class FormFileRepository implements FormRepository {
 
-    public void atualizar(Scanner scan, String pathFormulario) {
+    private final String pathPets;
 
-        System.out.println("Digite a pergunta que deseja adicionar ao formulário:");
+    public FormFileRepository(
+            String pathPets
+            ) {
+        this.pathPets = pathPets;
+    }
 
-        String resposta = scan.nextLine();
+    @Override
+    public void adicionar(String resposta) {
 
-        try {
-            Files.walk(Paths.get(pathFormulario))
+        try (var paths = Files.walk(Paths.get(pathPets))){
+            paths
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".TXT"))
                     .forEach(filePath -> {
@@ -37,5 +42,15 @@ public class AtualizarForm {
         } catch (IOException e) {
             System.err.println("ERRO: " + e.getMessage());
         }
+    }
+
+    @Override
+    public void alterar() {
+
+    }
+
+    @Override
+    public void excluir() {
+
     }
 }

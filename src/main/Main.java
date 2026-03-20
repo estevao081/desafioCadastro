@@ -1,10 +1,11 @@
 package main;
 
-import main.models.PetFiltro;
+import main.repositories.FormFileRepository;
+import main.repositories.FormRepository;
 import main.repositories.PetFileRepository;
 import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
-import main.services.form.AtualizarForm;
+import main.services.form.FormService;
 import main.services.form.MenuForm;
 import main.services.pet.*;
 
@@ -31,9 +32,11 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         GerarNome gerarNome = new GerarNome();
         LerFormulario lerFormulario = new LerFormulario();
-        AtualizarForm atualizarForm = new AtualizarForm();
         RespostasUsuario respostasUsuario = new RespostasUsuario();
+        FormRepository formRepository = new FormFileRepository(pathFormulario);
+        FormService formService = new FormService(formRepository);
         MontarPet montarPet = new MontarPet(respostasUsuario, lerFormulario, pathFormulario);
+
         PetRepository petRepository = new PetFileRepository(
                 gerarNome,
                 petUtils,
@@ -47,9 +50,10 @@ public class Main {
                 montarPet,
                 petUtils);
 
-        MenuForm menuForm = new MenuForm();
 
-        MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, menuForm, atualizarForm, pathFormulario);
+        MenuForm menuForm = new MenuForm(formService);
+
+        MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, menuForm);
 
         menuPrincipal.exibir();
     }

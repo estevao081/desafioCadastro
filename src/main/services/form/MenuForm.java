@@ -1,11 +1,19 @@
 package main.services.form;
 
+import main.repositories.FormRepository;
+
 import java.util.List;
 import java.util.Scanner;
 
 public class MenuForm {
 
-    public void exibirMenuForm(Scanner scan, String pathFormulario, AtualizarForm atualizarForm) {
+    private final FormService formService;
+
+    public MenuForm(FormService formService) {
+        this.formService = formService;
+    }
+
+    public void exibirMenuForm(Scanner scan) {
 
         while (true) {
 
@@ -22,7 +30,7 @@ public class MenuForm {
             String opcaoForm = scan.nextLine();
 
             switch (opcaoForm) {
-                case "1" -> FormService.adicionarPergunta(scan, pathFormulario, atualizarForm);
+                case "1" -> criar(scan);
                 case "2" -> System.out.println("b");
                 case "3" -> System.out.println("c");
                 case "4" -> System.out.println("d");
@@ -32,5 +40,14 @@ public class MenuForm {
                 }
             }
         }
+    }
+
+    private void criar(Scanner scan) {
+
+        System.out.println("Digite a pergunta que deseja adicionar ao formulário:");
+
+        String resposta = scan.nextLine();
+
+        formService.adicionar(resposta);
     }
 }
