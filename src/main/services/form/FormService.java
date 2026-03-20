@@ -10,11 +10,11 @@ public class FormService {
         this.formRepository = formRepository;
     }
 
-    public void adicionar(String resposta) {
-        formRepository.adicionar(resposta);
+    public void adicionar(String pergunta) {
+        formRepository.adicionar(pergunta);
     }
 
-    public void alterar() {
-
+    public void alterar(int campo, String novoValor) {
+        formRepository.alterar(campo, novoValor);
     }
 }

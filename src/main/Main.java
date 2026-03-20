@@ -6,6 +6,7 @@ import main.repositories.PetFileRepository;
 import main.repositories.PetRepository;
 import main.services.MenuPrincipal;
 import main.services.form.FormService;
+import main.services.form.FormUtils;
 import main.services.form.MenuForm;
 import main.services.pet.*;
 
@@ -32,6 +33,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         GerarNome gerarNome = new GerarNome();
         LerFormulario lerFormulario = new LerFormulario();
+        FormUtils formUtils = new FormUtils(pathFormulario);
         RespostasUsuario respostasUsuario = new RespostasUsuario();
         FormRepository formRepository = new FormFileRepository(pathFormulario);
         FormService formService = new FormService(formRepository);
@@ -51,7 +53,11 @@ public class Main {
                 petUtils);
 
 
-        MenuForm menuForm = new MenuForm(formService);
+        MenuForm menuForm = new MenuForm(
+                formService,
+                lerFormulario,
+                scan,
+                formUtils);
 
         MenuPrincipal menuPrincipal = new MenuPrincipal(scan, menuPet, menuForm);
 

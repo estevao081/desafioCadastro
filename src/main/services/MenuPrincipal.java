@@ -33,7 +33,7 @@ public class MenuPrincipal {
             switch (opcao) {
                 case "1" -> menuPet.exibir();
 
-                case "2" -> menuForm.exibirMenuForm(scan);
+                case "2" -> menuForm.exibirMenuForm();
 
                 case "3" -> {
                     System.out.println("Encerrando...");

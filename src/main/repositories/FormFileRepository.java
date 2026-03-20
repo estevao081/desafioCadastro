@@ -8,18 +8,18 @@ import java.util.List;
 
 public class FormFileRepository implements FormRepository {
 
-    private final String pathPets;
+    private final String pathFormulario;
 
     public FormFileRepository(
-            String pathPets
-            ) {
-        this.pathPets = pathPets;
+            String pathFormulario
+    ) {
+        this.pathFormulario = pathFormulario;
     }
 
     @Override
-    public void adicionar(String resposta) {
+    public void adicionar(String pergunta) {
 
-        try (var paths = Files.walk(Paths.get(pathPets))){
+        try (var paths = Files.walk(Paths.get(pathFormulario))) {
             paths
                     .filter(Files::isRegularFile)
                     .filter(p -> p.toString().endsWith(".TXT"))
@@ -28,11 +28,11 @@ public class FormFileRepository implements FormRepository {
 
                             List<String> linhas = Files.readAllLines(filePath);
 
-                            linhas.add("EXTRA - " + resposta);
+                            int campo = linhas.size() + 1;
+
+                            linhas.add(campo + " - EXTRA - " + pergunta);
 
                             Files.write(filePath, linhas);
-
-                            System.out.println("Formulário alterado com sucesso!");
 
                         } catch (IOException e) {
                             System.err.println("ERRO: " + e.getMessage());
@@ -45,12 +45,23 @@ public class FormFileRepository implements FormRepository {
     }
 
     @Override
-    public void alterar() {
+    public void alterar(int campo, String novoValor) {
 
+        Path arquivoFormulario = Paths.get(pathFormulario);
+
+        try {
+            List<String> linhas = Files.readAllLines(arquivoFormulario);
+            linhas.set(campo, novoValor);
+            Files.write(arquivoFormulario, linhas);
+
+        } catch (IOException e) {
+            System.err.println("ERRO ao alterar arquivo: " + e.getMessage());
+        }
     }
 
     @Override
     public void excluir() {
+
 
     }
 }
